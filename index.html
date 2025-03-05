@@ -10,7 +10,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,200;1,200&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
             rel="stylesheet"
         />
 
@@ -27,14 +27,19 @@
     </head>
     <body>
         <div class="container">
-            <section
-                id="page1"
-                class="d-flex justify-content-center align-items-center vh-100"
-            >
+            <section id="page1">
                 <h1 class="typing"></h1>
             </section>
             <section id="page2">
-                <div id="#barriers-vis"></div>
+                <div id="main-message">Here is the main message</div>
+            </section>
+            <section id="page3">
+                <div class="col-4">
+                    <div class="title-text">What are the barriers to entry in the LLM industry?</div>
+                </div>
+                <div class="col">
+                    <div id="barriers-vis"></div>
+                </div>
             </section>
         </div>
 
@@ -44,13 +49,12 @@
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"
         ></script>
-        <!-- External Libs -->
         <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
         <!-- d3 -->
         <script src="https://d3js.org/d3.v7.min.js"></script>
 
         <!-- Visualization objects -->
-        <script src="js/barriers.js"></script>
+        <script src="js/barriersvis.js"></script>
 
         <!-- Load data, create visualizations -->
         <script src="js/main.js"></script>

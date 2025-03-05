@@ -1,0 +1,28 @@
+{
+    "barriers": [
+      {
+        "name": "Computational Resources",
+        "description": "Building and running large language models requires extensive computational power, making scalability and memory management significant challenges."
+      },
+      {
+        "name": "Specialized Talent Shortage",
+        "description": "The lack of qualified professionals skilled in AI and machine learning makes it difficult to assemble and maintain LLMs effectively."
+      },
+      {
+        "name": "High Energy Consumption",
+        "description": "The energy demands of training and operating LLMs result in costly operations and raise concerns about environmental sustainability."
+      },
+      {
+        "name": "Financial Constraints",
+        "description": "The financial burden of training LLMs is overwhelming for smaller organizations, and while cloud services offer solutions, they come with steep costs."
+      },
+      {
+        "name": "Model Maintenance and Transparency",
+        "description": "As LLMs evolve, maintaining their performance and transparency becomes more complex, particularly in fields requiring high reliability."
+      },
+      {
+        "name": "Data Privacy and Security",
+        "description": "The use of large datasets in training LLMs raises concerns about data privacy and security, especially when dealing with sensitive information."
+      }
+    ]
+  }

@@ -1,9 +1,30 @@
+html {
+    scroll-behavior: smooth;
+}
 body {
-    background-color: #040622;
+    color: white;
+    background: linear-gradient(90deg, #040622 0%, #110e2e 100%);
+    font-family: "Roboto", sans-serif;
 }
 
 h1, .typed-cursor {
     color: white;
     font-family: "Inter", sans-serif;
     font-size: 80px;
+}
+
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#page-3 {
+    flex-direction: column;
+}
+
+.title-text {
+    font-size: 40px;
+    font-weight: 700;
 }
