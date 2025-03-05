@@ -30,15 +30,39 @@
             <section id="page1">
                 <h1 class="typing"></h1>
             </section>
-            <section id="page2">
-                <div id="main-message">Here is the main message</div>
+            <section id="page2" class="vertical-container">
+                <div id="main-message">
+                    Entrepreneurs seeking to enter the LLM space must
+                    strategically balance token cost with performance metrics of
+                    the tokens...
+                </div>
+                <div>→ Here are 4 visualizations to help</div>
             </section>
             <section id="page3">
                 <div class="col-4">
-                    <div class="title-text">What are the barriers to entry in the LLM industry?</div>
+                    <div class="title-text">
+                        What are the barriers to entry in the LLM industry?
+                    </div>
                 </div>
                 <div class="col">
                     <div id="barriers-vis"></div>
+                    <div id="barriers-tooltip"></div>
+                </div>
+            </section>
+            <section id="page4">
+                <!-- economical vis-->
+            </section>
+            <section id="page5">
+                <!-- performance vis-->
+            </section>
+            <section id="page6">
+                <div class="col-4">
+                    <div class="title-text">
+                        How scalable are LLMS for high volume use cases?
+                    </div>
+                </div>
+                <div class="col">
+                    <div id="scalability-vis"></div>
                 </div>
             </section>
         </div>
@@ -59,5 +83,7 @@
         <!-- Load data, create visualizations -->
         <script src="js/main.js"></script>
         <script src="js/animations.js"></script>
+        <script src="assets/lock.js"></script>
+        <script src="assets/key.js"></script>
     </body>
 </html>

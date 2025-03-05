@@ -19,10 +19,6 @@
       {
         "name": "Model Maintenance and Transparency",
         "description": "As LLMs evolve, maintaining their performance and transparency becomes more complex, particularly in fields requiring high reliability."
-      },
-      {
-        "name": "Data Privacy and Security",
-        "description": "The use of large datasets in training LLMs raises concerns about data privacy and security, especially when dealing with sensitive information."
       }
     ]
   }
