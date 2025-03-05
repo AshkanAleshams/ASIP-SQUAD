@@ -1,0 +1,9 @@
+body {
+    background-color: #040622;
+}
+
+h1, .typed-cursor {
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-size: 80px;
+}
