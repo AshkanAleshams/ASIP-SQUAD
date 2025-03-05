@@ -27,11 +27,15 @@
     </head>
     <body>
         <div class="container">
-            <div
+            <section
+                id="page1"
                 class="d-flex justify-content-center align-items-center vh-100"
             >
-                <h1 class="typing-animation"></h1>
-            </div>
+                <h1 class="typing"></h1>
+            </section>
+            <section id="page2">
+                <div id="#barriers-vis"></div>
+            </section>
         </div>
 
         <!-- Load JS libraries -->
@@ -42,22 +46,14 @@
         ></script>
         <!-- External Libs -->
         <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-        <script>
-            var typed = new Typed(".typing-animation", {
-                strings: ["Hello ASIP...", "Welcome to the story"],
-                typeSpeed: 25,
-                loop: true,
-                backSpeed: 30,
-                startDelay: 500,
-                backDelay: 500,
-            });
-        </script>
         <!-- d3 -->
         <script src="https://d3js.org/d3.v7.min.js"></script>
 
         <!-- Visualization objects -->
+        <script src="js/barriers.js"></script>
 
         <!-- Load data, create visualizations -->
         <script src="js/main.js"></script>
+        <script src="js/animations.js"></script>
     </body>
 </html>
