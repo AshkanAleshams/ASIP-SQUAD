@@ -60,8 +60,15 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div id="economical-vis"></div>
-                    <div id="economical-tooltip"></div>
+                    <div class="form-group">
+                        <!-- Select box to choose the ranking type -->
+                        <select class="form-control" id="token-type" onchange="updateEconomicVis()">
+                            <option value="price_per_input_token">Input Tokens</option>
+                            <option value="price_per_output_token">Output Tokens</option>
+                        </select>
+                    </div>
+                    <div id="economic-vis"></div>
+                    <div id="economic-tooltip"></div>
                 </div>
             </section>
             <section id="page5">
@@ -116,11 +123,14 @@
         <!-- Visualization objects -->
         <script src="js/barriersvis.js"></script>
         <script src="js/benchmarkvis.js"></script>
+        <script src="js/economicvis.js"></script>
+        <script src="js/performancevis.js"></script>
 
         <!-- Load data, create visualizations -->
         <script src="js/main.js"></script>
         <script src="js/animations.js"></script>
         <script src="assets/lock.js"></script>
         <script src="assets/key.js"></script>
+
     </body>
 </html>
