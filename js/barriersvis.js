@@ -54,7 +54,7 @@ class BarriersVis {
 
     wrangleData() {
         let vis = this;
-        vis.data = vis.data.barriers;
+        vis.displayData = vis.data.barriers;
         vis.updateVis();
     }
 
@@ -63,13 +63,13 @@ class BarriersVis {
 
         const center = { x: vis.width / 2, y: vis.height / 2 };
         const radius = 250;
-        const numBarriers = vis.data.length;
+        const numBarriers = vis.displayData.length;
         const angleStep = (2 * Math.PI) / numBarriers;
 
         // connecting ines
         vis.lines = vis.svg
             .selectAll(".lines")
-            .data(vis.data)
+            .data(vis.displayData)
             .enter()
             .append("line")
             .attr("class", "lines")
@@ -87,7 +87,7 @@ class BarriersVis {
             .html(keySVG);
 
         const onMouseOver = function (event, d) {
-            const i = vis.data.indexOf(d);
+            const i = vis.displayData.indexOf(d);
             d3.select(`#barriers-${i}`)
                 .transition()
                 .duration(200)
@@ -100,7 +100,7 @@ class BarriersVis {
         };
 
         const onMouseOut = function (event, d) {
-            const i = vis.data.indexOf(d);
+            const i = vis.displayData.indexOf(d);
             d3.select(`#barriers-${i}`)
                 .transition()
                 .duration(200)
@@ -111,7 +111,7 @@ class BarriersVis {
         // outer circles
         vis.circles = vis.svg
             .selectAll(".barriers")
-            .data(vis.data)
+            .data(vis.displayData)
             .enter()
             .append("circle")
             .attr("id", (d, i) => `barriers-${i}`)
@@ -125,7 +125,7 @@ class BarriersVis {
 
         vis.locks = vis.svg
             .selectAll(".locks")
-            .data(vis.data)
+            .data(vis.displayData)
             .enter()
             .append("g")
             .attr("id", (d, i) => `locks-${i}`)
@@ -143,7 +143,7 @@ class BarriersVis {
 
         vis.accents = vis.svg
             .selectAll(".accents")
-            .data(vis.data)
+            .data(vis.displayData)
             .enter()
             .append("circle")
             .attr("class", "accents")
@@ -164,7 +164,7 @@ class BarriersVis {
 
         vis.labelArcs = vis.svg
             .selectAll(".label-arcs")
-            .data(vis.data)
+            .data(vis.displayData)
             .enter()
             .append("path")
             .attr("class", "label-arcs")
@@ -181,7 +181,7 @@ class BarriersVis {
 
         vis.labels = vis.svg
             .selectAll(".labels")
-            .data(vis.data)
+            .data(vis.displayData)
             .enter()
             .append("text")
             .attr("class", "labels")
