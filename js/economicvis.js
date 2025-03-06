@@ -5,12 +5,14 @@ class EconomicVis {
         this.parentElement = _parentElement;
         this.data = _data;
         this.initVis();
+
+        
     }
 
     initVis() {
         let vis = this;
 
-        vis.margin = { top: 30, right: 50, bottom: 30, left: 50 };
+        vis.margin = { top: 30, right: 50, bottom: 100, left: 50 };
 
         (vis.width =
             document.getElementById(vis.parentElement).getBoundingClientRect()
@@ -24,8 +26,7 @@ class EconomicVis {
             .append("svg")
             .attr(
                 "width",
-                vis.width + vis.margin.left,
-                vis.height + vis.margin.right
+                vis.width + vis.margin.left
             )
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .append("g")
@@ -43,6 +44,10 @@ class EconomicVis {
 
         vis.y = d3.scaleLinear()
             .range([vis.height, 0]);
+
+        vis.colorScale = d3.scaleOrdinal()
+            .domain(["OpenAI", "Anthropic", "Google", "DeepSeek", "Cerebras", 'Cohere']) // Add more providers if needed
+            .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "orange"]); // Ass
 
         // Append x-axis
         vis.xAxis = d3.axisBottom()
@@ -63,6 +68,7 @@ class EconomicVis {
 
             .call(vis.yAxis);
 
+
         // Y-Axis label
         vis.svg.append("text")
             .attr("class", "y-axis-label")
@@ -70,7 +76,7 @@ class EconomicVis {
             .attr("x", -(this.height / 2))
             .attr("y", - this.margin.left + 20)
             .attr("font-size", "12px")
-            .attr("fill", "grey")
+            .attr("fill", "white")
             .attr("text-anchor", "middle");
 
 
@@ -93,36 +99,45 @@ class EconomicVis {
         let yOption = d3.select("#token-type").property("value");
 
         // Update y-axis label
-        d3.select(".y-axis-label").text(yOption == 'price_per_input_token' ? "Price per million input tokens" : "Price per million output tokens");
+        d3.select(".y-axis-label").text(yOption == 'price_per_input_token' ? "Price of input tokens ($/ 1M tokens)" : "Price of output tokens ($/ 1M tokens)");
 
         // sort
-        // data.sort((a, b) => b[yOption] - a[yOption]);
+        let sortOption = d3.select('#sort-type').property('value');
+        if (sortOption === 'sorted') {
+            vis.displayData.sort((a, b) => b[yOption] - a[yOption]);
+        }
+
 
         // Update domains
         vis.x.domain(vis.displayData.map(d => d.model_id));
-        vis.y.domain([0, d3.max(vis.displayData, d => d[yOption])]); 	// dynamic
+        vis.y.domain([0, d3.max(vis.displayData, d => d[yOption] * 1_000_000)]); 	// dynamic
 
         // Update bars
-        vis.bars = vis.svg.selectAll("rect").data(vis.displayData, d => d);
+        vis.bars = vis.svg.selectAll("rect").data(vis.displayData, d => d.model_id);
 
         // Enter 
         vis.bars.enter().append("rect")
             .attr("class", "bar")
             .merge(vis.bars)
+            .attr("fill", d => vis.colorScale(d.provider))
             .attr("x", d => vis.x(d.model_id))
             .attr("y", vis.height)
             .attr("height", 0)
             .transition()
             .duration(1000)
-            .attr("y", d => vis.y(d[yOption]))
+            
+            .attr("y", d => vis.y(d[yOption] * 1_000_000))
             .attr("width", vis.x.bandwidth())
-            .attr("height", d => vis.height - vis.y(d[yOption]))
+            .attr("height", d => vis.height - vis.y(d[yOption] * 1_000_000))
 
         // Exit
         vis.bars.exit().remove();
 
         // Update axes ticks and labels
-        vis.xAxisGroup.call(vis.xAxis);
+        vis.xAxisGroup.call(vis.xAxis)
+            .selectAll("text")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
         vis.yAxisGroup.call(vis.yAxis);
     }
 }

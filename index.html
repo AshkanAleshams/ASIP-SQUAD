@@ -58,15 +58,23 @@
                     <div class="title-text">
                         Which LLM is most economical for the user?
                     </div>
-                </div>
-                <div class="col">
                     <div class="form-group">
                         <!-- Select box to choose the ranking type -->
                         <select class="form-control" id="token-type" onchange="updateEconomicVis()">
-                            <option value="price_per_input_token">Input Tokens</option>
-                            <option value="price_per_output_token">Output Tokens</option>
+                            <option value="price_per_input_token">Price of Input Tokens</option>
+                            <option value="price_per_output_token">Price of Output Tokens</option>
                         </select>
+                        &nbsp;
+                        <select class="form-control" id="sort-type" onchange="updateEconomicVis()">
+                            <option value="unsorted">Unsorted</option>
+                            <option value="sorted">Sorted</option>
+                            
+                        </select>
+                        
                     </div>
+                </div>
+                <div class="col">
+                    
                     <div id="economic-vis"></div>
                     <div id="economic-tooltip"></div>
                 </div>
