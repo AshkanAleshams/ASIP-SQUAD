@@ -7,3 +7,5 @@ var typed = new Typed(".typing", {
     startDelay: 500,
     backDelay: 500,
 });
+
+dotNav("section", "easeInOutQuint");
