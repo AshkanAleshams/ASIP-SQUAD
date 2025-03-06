@@ -1,3 +1,11 @@
+
+// global 
+let barriersToEntryVis, benchmarkVis, economicVis, performanceVis;
+
+// Date parser to convert strings to date objects
+let parseDate = d3.timeParse("%Y-%m-%d");
+
+
 // Load data
 let promises = [
     d3.json("data/barriers.json"), 
@@ -17,8 +25,15 @@ function renderVisualizations(data) {
    
     BarrierData = data[0];
     LLMStatsData = data[1];
-    let barriersToEntryVis = new BarriersVis("barriers-vis", BarrierData);
+
+    barriersToEntryVis = new BarriersVis("barriers-vis", BarrierData);
     // let benchmarkVis = new BenchmarkVis("benchmark-vis", [1, 2, 3]);
-    let economicVis = new EconomicVis("economic-vis", LLMStatsData);
-    let performanceVis = new PerformanceVis("performance-vis", LLMStatsData);
+    economicVis = new EconomicVis("economic-vis", LLMStatsData);
+    performanceVis = new PerformanceVis("performance-vis", LLMStatsData);
+
+
+}
+
+function updateEconomicVis(){
+    economicVis.wrangleData();
 }
