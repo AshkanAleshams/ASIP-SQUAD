@@ -41,15 +41,26 @@ section {
 #barriers-tooltip {
     display: none;
     position: absolute;
-    background-color: #282442;
+    background-color: #1c1832;
     color: rgb(255, 255, 255);
-    border: 1px solid black;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 8px;
     z-index: 1;
     width: 200px;
 }
 
 #barriers-tooltip p {
     font-size: 14px;
+}
+
+.vis-container {
+    width: 100%;
+}
+
+#benchmark-vis {
+    width: 100%;
+}
+
+#page6 .title-text {
+    margin-bottom: 50px;
 }

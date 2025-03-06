@@ -11,4 +11,5 @@ Promise.all(promises)
 
 function renderVisualizations(data) {
     let barriersToEntry = new BarriersVis("barriers-vis", data);
+    let benchmark = new BenchmarkVis("benchmark-vis", [1, 2, 3]);
 }
