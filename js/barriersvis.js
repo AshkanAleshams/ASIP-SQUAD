@@ -54,7 +54,7 @@ class BarriersVis {
 
     wrangleData() {
         let vis = this;
-        vis.data = vis.data[0].barriers;
+        vis.data = vis.data.barriers;
         vis.updateVis();
     }
 
