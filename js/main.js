@@ -37,3 +37,7 @@ function renderVisualizations(data) {
 function updateEconomicVis(){
     economicVis.wrangleData();
 }
+
+function updatePerformanceVis(){
+    // performanceVis.wrangleData();
+}
