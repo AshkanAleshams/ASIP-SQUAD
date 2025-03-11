@@ -10,7 +10,7 @@ class PerformanceVis {
     initVis() {
         let vis = this;
 
-        vis.margin = { top: 10, right: 10, bottom: 10, left: 10 };
+        vis.margin = { top: 30, right: 50, bottom: 100, left: 50 };
 
         (vis.width =
             document.getElementById(vis.parentElement).getBoundingClientRect()
@@ -71,6 +71,7 @@ class PerformanceVis {
         // Y-Axis label
         vis.svg.append("text")
             .attr("class", "y-axis-label")
+            .attr("id", "performance-y-axis-title")
             .attr("transform", "rotate(-90)")
             .attr("x", -(this.height / 2))
             .attr("y", - this.margin.left + 20)
@@ -96,18 +97,13 @@ class PerformanceVis {
         let yOption = d3.select("#performance-type").property("value");
 
         // Update y-axis label
-        d3.select(".y-axis-label").text(yOption == 'throughput' ? "Throughput" : "Latency");
+        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Throughput" : "Latency");
 
-        // sort
-        let sortOption = d3.select('#sort-type').property('value');
-        if (sortOption === 'sorted') {
-            vis.displayData.sort((a, b) => b[yOption] - a[yOption]);
-        }
-
+       
 
         // Update domains
         vis.x.domain(vis.displayData.map(d => d.model_id));
-        vis.y.domain([0, d3.max(vis.displayData, d => d[yOption] * 1_000_000)]); 	// dynamic
+        vis.y.domain([0, d3.max(vis.displayData, d => d[yOption])]); 	// dynamic
 
         // Update bars
         vis.bars = vis.svg.selectAll("rect").data(vis.displayData, d => d.model_id);
@@ -122,10 +118,9 @@ class PerformanceVis {
             .attr("height", 0)
             .transition()
             .duration(1000)
-
-            .attr("y", d => vis.y(d[yOption] * 1_000_000))
+            .attr("y", d => vis.y(d[yOption]))
             .attr("width", vis.x.bandwidth())
-            .attr("height", d => vis.height - vis.y(d[yOption] * 1_000_000))
+            .attr("height", d => vis.height - vis.y(d[yOption]))
 
         // Exit
         vis.bars.exit().remove();

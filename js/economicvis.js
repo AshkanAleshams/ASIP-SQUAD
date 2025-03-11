@@ -72,6 +72,7 @@ class EconomicVis {
         // Y-Axis label
         vis.svg.append("text")
             .attr("class", "y-axis-label")
+            .attr("id", "economic-y-axis-title")
             .attr("transform", "rotate(-90)")
             .attr("x", -(this.height / 2))
             .attr("y", - this.margin.left + 20)
@@ -99,7 +100,7 @@ class EconomicVis {
         let yOption = d3.select("#token-type").property("value");
 
         // Update y-axis label
-        d3.select(".y-axis-label").text(yOption == 'price_per_input_token' ? "Price of input tokens ($/ 1M tokens)" : "Price of output tokens ($/ 1M tokens)");
+        d3.select("#economic-y-axis-title").text(yOption == 'price_per_input_token' ? "Price of input tokens ($/ 1M tokens)" : "Price of output tokens ($/ 1M tokens)");
 
         // sort
         let sortOption = d3.select('#sort-type').property('value');

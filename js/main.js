@@ -39,5 +39,5 @@ function updateEconomicVis(){
 }
 
 function updatePerformanceVis(){
-    // performanceVis.wrangleData();
+    performanceVis.wrangleData();
 }
