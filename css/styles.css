@@ -45,6 +45,7 @@ section {
     border-radius: 8px;
     z-index: 1;
     width: 200px;
+    border: 1px solid #38cbdc;
 }
 
 #barriers-tooltip p {
