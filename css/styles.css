@@ -51,8 +51,13 @@ section {
 }
 
 .vis-container {
+    position: relative;
     width: 100%;
-    height: 75vh;
+    height: 100%;
+}
+
+#page7 {
+    flex: 1;
 }
 
 #benchmark-vis {
@@ -62,4 +67,34 @@ section {
 
 .footer {
     margin: 2vh;
+}
+
+.benchmark-select {
+    width: max-content;
+    background-color: transparent;
+    background: transparent;
+    color: #38cbdc;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #38cbdc;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+path.dim {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+#benchmark-tooltip {
+    display: none;
+    background-color: #1c183288;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #38cbdc;
+    z-index: 1;
+    width: max-content;
 }
