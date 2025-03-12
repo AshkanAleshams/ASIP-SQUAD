@@ -58,6 +58,7 @@
                     <div class="title-text">
                         Which LLM is most economical for the user?
                     </div>
+                    &nbsp;
                     <div class="form-group">
                         <!-- Select box to choose the ranking type -->
                         <select
@@ -90,11 +91,20 @@
             </section>
             <section id="page5">
                 <!-- performance vis-->
-
+                
                 <div class="col-4">
                     <div class="title-text">
                         What does the performance of LLMs look like given their
                         input API price ($/ 1M tokens)?
+                    </div>
+                    &nbsp;
+                    <div class="form-group">
+                        <!-- Select box to choose the ranking type -->
+                        <select class="form-control" id="performance-type" onchange="updatePerformanceVis()">
+                            <option value="throughput">Processing speed</option>
+                            <option value="latency">Response Time</option>
+                        </select>
+                        &nbsp;
                     </div>
                 </div>
                 <div class="col">

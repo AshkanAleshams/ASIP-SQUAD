@@ -10,7 +10,7 @@ class PerformanceVis {
     initVis() {
         let vis = this;
 
-        vis.margin = { top: 10, right: 10, bottom: 10, left: 10 };
+        vis.margin = { top: 30, right: 50, bottom: 100, left: 50 };
 
         (vis.width =
             document.getElementById(vis.parentElement).getBoundingClientRect()
@@ -18,7 +18,7 @@ class PerformanceVis {
             vis.margin.left -
             vis.margin.right),
             (vis.height = 750 - vis.margin.top - vis.margin.bottom);
-            console.log(document.getElementById(vis.parentElement).getBoundingClientRect().width);
+        console.log(document.getElementById(vis.parentElement).getBoundingClientRect().width);
         vis.svg = d3
             .select(`#${vis.parentElement}`)
             .append("svg")
@@ -34,28 +34,102 @@ class PerformanceVis {
                 "translate(" + vis.margin.left + "," + vis.margin.top + ")"
             );
 
-        const radius = 95
-        const numCircles = vis.data.length;
-        const totalCircleWidth = numCircles * (2 * radius);
-        const totalSpacing = vis.width - totalCircleWidth;
-        const spacing = totalSpacing / (numCircles + 1);
 
-        // init benchmark circles
-        vis.svg
-            .selectAll(".benchmark-circle")
-            .data(vis.data)
-            .enter()
-            .append("circle")
-            .attr("class", "benchmark-circle")
-            .attr("cx", (d, i) => spacing + radius + i * (2 * radius + spacing))
-            .attr("cy", vis.height / 4)
-            .attr("r", radius)
-            .attr("fill", "#f8f9fa");
+        // Scales
+        vis.x = d3.scaleBand()
+
+            .rangeRound([0, vis.width])
+            .paddingInner(0.1);
+
+        vis.y = d3.scaleLinear()
+            .range([vis.height, 0]);
+
+        vis.colorScale = d3.scaleOrdinal()
+            .domain(["OpenAI", "Anthropic", "Google", "DeepSeek", "Cerebras", 'Cohere']) // Add more providers if needed
+            .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "orange"]); // Ass
+
+        // Append x-axis
+        vis.xAxis = d3.axisBottom()
+            .scale(vis.x);
+
+        // Append y-axis
+        vis.yAxis = d3.axisLeft()
+            .scale(vis.y);
+
+
+        vis.xAxisGroup = vis.svg.append("g")
+            .attr("class", "axis x-axis")
+            .attr("transform", "translate(0," + (vis.height) + ")")
+            .call(vis.xAxis);
+
+        vis.yAxisGroup = vis.svg.append("g")
+            .attr("class", "axis y-axis")
+
+            .call(vis.yAxis);
+
+
+        // Y-Axis label
+        vis.svg.append("text")
+            .attr("class", "y-axis-label")
+            .attr("id", "performance-y-axis-title")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -(this.height / 2))
+            .attr("y", - this.margin.left + 20)
+            .attr("font-size", "12px")
+            .attr("fill", "white")
+            .attr("text-anchor", "middle");
+
 
         vis.wrangleData();
     }
 
-    wrangleData() {}
+    wrangleData() {
+        let vis = this;
+        vis.displayData = vis.data.models;
+        console.log(vis.displayData);
+        this.updateVis();
+    }
 
-    updateVis() {}
+    updateVis() {
+        let vis = this;
+
+        // get the currently selected option
+        let yOption = d3.select("#performance-type").property("value");
+
+        // Update y-axis label
+        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Throughput" : "Latency");
+
+       
+
+        // Update domains
+        vis.x.domain(vis.displayData.map(d => d.model_id));
+        vis.y.domain([0, d3.max(vis.displayData, d => d[yOption])]); 	// dynamic
+
+        // Update bars
+        vis.bars = vis.svg.selectAll("rect").data(vis.displayData, d => d.model_id);
+
+        // Enter 
+        vis.bars.enter().append("rect")
+            .attr("class", "bar")
+            .merge(vis.bars)
+            .attr("fill", d => vis.colorScale(d.provider))
+            .attr("x", d => vis.x(d.model_id))
+            .attr("y", vis.height)
+            .attr("height", 0)
+            .transition()
+            .duration(1000)
+            .attr("y", d => vis.y(d[yOption]))
+            .attr("width", vis.x.bandwidth())
+            .attr("height", d => vis.height - vis.y(d[yOption]))
+
+        // Exit
+        vis.bars.exit().remove();
+
+        // Update axes ticks and labels
+        vis.xAxisGroup.call(vis.xAxis)
+            .selectAll("text")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
+        vis.yAxisGroup.call(vis.yAxis);
+    }
 }

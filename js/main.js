@@ -43,3 +43,7 @@ function onSelectChange() {
 function updateEconomicVis(){
     economicVis.wrangleData();
 }
+
+function updatePerformanceVis(){
+    performanceVis.wrangleData();
+}
