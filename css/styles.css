@@ -83,6 +83,11 @@ section {
     font-weight: 500;
 }
 
+.form-select:hover {
+    background-color: #38cbdc;
+    color: #1c1832;
+    transition: all 0.3s;
+}
 
 path.dim {
     opacity: 0.5;
