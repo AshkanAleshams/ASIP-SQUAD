@@ -86,6 +86,8 @@ class BenchmarkVis {
 
         vis.color = d3.scaleSequential(d3.interpolateCool);
 
+        vis.tooltip = d3.select("#benchmark-tooltip");
+
         vis.wrangleData();
     }
 
@@ -137,15 +139,25 @@ class BenchmarkVis {
             .selectAll("path")
             .data(vis.displayData, (d) => d.model);
 
-        bars.exit().remove();
-
         let barsEnter = bars
             .enter()
             .append("path")
             .attr("fill", (d) => vis.color(d[selectedCategory]))
             .attr("stroke", (d) => vis.color(d[selectedCategory]))
             .attr("stroke-width", 2)
-            .attr("d", vis.arc);
+            .attr("d", vis.arc)
+            .on("mouseover", function (event, d) {
+                d3.select(this).attr("stroke-width", 6);
+                d3.selectAll("path").classed("dim", true);
+                d3.select(this).classed("dim", false);
+
+                renderTooltip(event, d);
+            })
+            .on("mouseout", function () {
+                d3.select(this).attr("stroke-width", 2);
+                d3.selectAll("path").classed("dim", false);
+                vis.tooltip.style("display", "none");
+            });
 
         bars = barsEnter.merge(bars);
 
@@ -154,5 +166,22 @@ class BenchmarkVis {
             .attr("d", vis.arc)
             .attr("fill", (d) => vis.color(d[selectedCategory]))
             .attr("stroke", (d) => vis.color(d[selectedCategory]));
+
+        const renderTooltip = (event, d) => {
+            vis.tooltip
+                .style("left", `${event.pageX + 10}px`)
+                .style("top", `${event.pageY}px`)
+                .style("display", "inline-block")
+                .html(
+                    `
+                        <h5>${d.model}</h5>
+                        <strong>Average:</strong> ${d.average}
+                        <br>
+                        <strong>CO2 Cost:</strong> ${d.co2cost}
+                        <br>
+                        <strong>Params:</strong> ${d.params}
+                    `
+                );
+        };
     }
 }
