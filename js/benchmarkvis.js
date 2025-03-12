@@ -32,11 +32,7 @@ class BenchmarkVis {
         vis.svg = d3
             .select(`#${vis.parentElement}`)
             .append("svg")
-            .attr(
-                "width",
-                vis.width + vis.margin.left,
-                vis.height + vis.margin.right
-            )
+            .attr("width", vis.width + vis.margin.left + vis.margin.right)
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .append("g")
             .attr(

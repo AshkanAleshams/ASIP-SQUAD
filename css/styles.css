@@ -45,6 +45,7 @@ section {
     border-radius: 8px;
     z-index: 1;
     width: 200px;
+    border: 1px solid #38cbdc;
 }
 
 #barriers-tooltip p {
@@ -83,6 +84,11 @@ section {
     font-weight: 500;
 }
 
+.form-select:hover {
+    background-color: #38cbdc;
+    color: #1c1832;
+    transition: all 0.3s;
+}
 
 path.dim {
     opacity: 0.5;
