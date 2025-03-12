@@ -21,17 +21,23 @@ Promise.all(promises)
         console.log(error);
     });
 
+
+let selectedCategory = "average";
+
 function renderVisualizations(data) {
     BarrierData = data[0];
     LLMStatsData = data[1];
     OpenData = data[2];
 
-    benchmarkCategories = ["Average Benchmark", "Parameters Per Billion", "CO2 Cost"];
-
     barriersToEntryVis = new BarriersVis("barriers-vis", BarrierData);
-    benchmarkVis = new BenchmarkVis("benchmark-vis", OpenData, benchmarkCategories);
+    benchmarkVis = new BenchmarkVis("benchmark-vis", OpenData);
     economicVis = new EconomicVis("economic-vis", LLMStatsData);
     performanceVis = new PerformanceVis("performance-vis", LLMStatsData);
+}
+
+function onSelectChange() {
+    selectedCategory = document.getElementById("benchmark").value;
+    benchmarkVis.updateVis();
 }
 
 function updateEconomicVis(){
