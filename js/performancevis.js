@@ -4,6 +4,8 @@ class PerformanceVis {
     constructor(_parentElement, _data) {
         this.parentElement = _parentElement;
         this.data = _data;
+
+        console.log(this.data);
         this.initVis();
     }
 
@@ -74,7 +76,7 @@ class PerformanceVis {
             .attr("id", "performance-y-axis-title")
             .attr("transform", "rotate(-90)")
             .attr("x", -(this.height / 2))
-            .attr("y", - this.margin.left + 20)
+            .attr("y", - this.margin.left + 10)
             .attr("font-size", "12px")
             .attr("fill", "white")
             .attr("text-anchor", "middle");
@@ -92,6 +94,12 @@ class PerformanceVis {
     wrangleData() {
         let vis = this;
         vis.displayData = vis.data.models;
+        // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
+        vis.displayData = vis.displayData.map(d => ({
+            ...d,
+            price_per_input_token: (d.price_per_input_token * 1_000_000).toFixed(2),
+            price_per_output_token: (d.price_per_output_token * 1_000_000).toFixed(2)
+        }));
         console.log(vis.displayData);
         this.updateVis();
     }
@@ -103,7 +111,7 @@ class PerformanceVis {
         let yOption = d3.select("#performance-type").property("value");
 
         // Update y-axis label
-        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Throughput" : "Latency");
+        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Performance speed: throughput / s" : "Response Time: latency (ms)");
 
 
 
@@ -119,6 +127,7 @@ class PerformanceVis {
             .attr("class", "bar")
             .merge(vis.bars)
             .on("mouseover", function (event, d) {
+                 // hover and give diming effect to other bars and ticks
                 d3.select(this).attr("stroke-width", 6);
                 d3.selectAll("rect").classed("dim", true);
                 d3.select(this).classed("dim", false);
@@ -127,21 +136,25 @@ class PerformanceVis {
                     .style("opacity", 1)
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px")
-                    .html(`
-                <div >
-                    <h3>${d.state}<h3>
-                    <h4> Population:  ${d.population}<h4>
-                    <h4> Cases (absolute): ${d.absCases}</h4> 
-                    <h4> Deaths (absolute): ${d.absDeaths} <h4>    
-                    <h4> Cases (relative): ${d.relCases}</h4>
-                    <h4> Deaths (relative): ${d.relDeaths}</h4>
-                </div>`);
+                    .html( `
+                        <h5>${d.model_id}</h5>
+                        <strong>Provider:</strong> ${d.provider}
+                        <br>
+                        <strong>Throughput:</strong> ${d.throughput} / s
+                        <br>
+                        <strong>Latency</strong> ${d.latency} ms
+                        <br>
+                        <strong>Price per input token ($/1M tokens):</strong> $${d.price_per_input_token} 
+                        <br>
+                        <strong>Price per output token ($/1M tokens):</strong> $${d.price_per_output_token}
+
+                    `);
 
             })
             .on("mouseout", function () {
+                // unhover and remove diming effect 
                 d3.select(this).attr("stroke-width", 2);
                 d3.selectAll("rect ").classed("dim", false);
-
                 vis.tooltip
                     .style("opacity", 0)
                     .style("left", 0)
