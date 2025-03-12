@@ -41,11 +41,11 @@
                 <div>→ Here are 4 visualizations to help</div>
             </section>
             <section id="page3">
-                <div class="col-4">
-                    <div class="title-text">
-                        What are the barriers to entry in the LLM industry?
-                    </div>
+                <div class="title-text">
+                    What are the barriers to entry in the LLM industry?
                 </div>
+            </section>
+            <section id="barrier-page">
                 <div class="col">
                     <div id="barriers-vis"></div>
                     <div id="barriers-tooltip"></div>
@@ -91,7 +91,7 @@
             </section>
             <section id="page5">
                 <!-- performance vis-->
-                
+
                 <div class="col-4">
                     <div class="title-text">
                         What does the performance of LLMs look like given their
@@ -100,7 +100,11 @@
                     &nbsp;
                     <div class="form-group">
                         <!-- Select box to choose the ranking type -->
-                        <select class="form-select" id="performance-type" onchange="updatePerformanceVis()">
+                        <select
+                            class="form-select"
+                            id="performance-type"
+                            onchange="updatePerformanceVis()"
+                        >
                             <option value="throughput">Processing speed</option>
                             <option value="latency">Response Time</option>
                         </select>

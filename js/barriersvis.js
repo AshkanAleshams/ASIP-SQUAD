@@ -2,7 +2,6 @@
  * Visualization for barriers to entry
  */
 const FILL_COLOR = "#A890F0";
-const VIS_HEIGHT = 1000;
 
 class BarriersVis {
     constructor(_parentElement, _data) {
@@ -21,16 +20,17 @@ class BarriersVis {
                 .width -
             vis.margin.left -
             vis.margin.right),
-            (vis.height = VIS_HEIGHT - vis.margin.top - vis.margin.bottom);
+            (vis.height =
+                document
+                    .getElementById(vis.parentElement)
+                    .getBoundingClientRect().width -
+                vis.margin.top -
+                vis.margin.bottom);
 
         vis.svg = d3
             .select(`#${vis.parentElement}`)
             .append("svg")
-            .attr(
-                "width",
-                vis.width + vis.margin.left,
-                vis.height + vis.margin.right
-            )
+            .attr("width", vis.width + vis.margin.left + vis.margin.right)
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .append("g")
             .attr(
@@ -38,16 +38,9 @@ class BarriersVis {
                 "translate(" + vis.margin.left + "," + vis.margin.top + ")"
             );
 
-        // base circle
-        vis.svg
-            .append("circle")
-            .attr("class", "base-circle")
-            .attr("cx", vis.width / 2)
-            .attr("cy", vis.height / 2)
-            .attr("r", 95)
-            .attr("fill", FILL_COLOR);
-
         vis.tooltip = d3.select("#barriers-tooltip");
+
+        vis.nodeRadius = 60;
 
         vis.wrangleData();
     }
@@ -55,6 +48,15 @@ class BarriersVis {
     wrangleData() {
         let vis = this;
         vis.displayData = vis.data.barriers;
+
+        vis.nodes = vis.displayData.map((d, i) => ({
+            id: i + 1,
+            name: d.name,
+            description: d.description,
+        }));
+
+        vis.nodes.unshift({ id: 0, name: "", description: "" });
+
         vis.updateVis();
     }
 
@@ -63,134 +65,144 @@ class BarriersVis {
 
         const center = { x: vis.width / 2, y: vis.height / 2 };
         const radius = 250;
-        const numBarriers = vis.displayData.length;
+        const numBarriers = vis.nodes.length - 1;
         const angleStep = (2 * Math.PI) / numBarriers;
 
-        // connecting ines
-        vis.lines = vis.svg
-            .selectAll(".lines")
-            .data(vis.displayData)
-            .enter()
-            .append("line")
-            .attr("class", "lines")
-            .attr("x1", center.x)
-            .attr("y1", center.y)
-            .attr("x2", (d, i) => center.x + radius * Math.cos(i * angleStep))
-            .attr("y2", (d, i) => center.y + radius * Math.sin(i * angleStep))
-            .attr("stroke", FILL_COLOR)
-            .attr("stroke-width", 5);
+        // set node positions around the central node
+        vis.nodes.forEach((node, i) => {
+            if (i === 0) {
+                node.x = center.x;
+                node.y = center.y;
+            } else {
+                node.x = center.x + radius * Math.cos((i - 1) * angleStep);
+                node.y = center.y + radius * Math.sin((i - 1) * angleStep);
+            }
+        });
 
-        // add key to base circle on top of lines
+        const lines = vis.nodes.slice(1).map((node) => ({
+            source: 0,
+            target: node.id,
+        }));
+
+        const simulation = d3
+            .forceSimulation(vis.nodes)
+            .force("link", d3.forceLink(lines).distance(350))
+            .force("charge", d3.forceManyBody().strength(-350))
+            .force("center", d3.forceCenter(vis.width / 2, vis.height / 2))
+            .on("tick", ticked);
+
+        // add connecting lines
         vis.svg
-            .append("g")
-            .attr("transform", `translate(${center.x - 30}, ${center.y - 30})`)
-            .html(keySVG);
-
-        const onMouseOver = function (event, d) {
-            const i = vis.displayData.indexOf(d);
-            d3.select(`#barriers-${i}`)
-                .transition()
-                .duration(200)
-                .attr("r", 60);
-            vis.tooltip
-                .style("display", "block")
-                .html(`<h6>${d.name}</h6><p>${d.description}</p>`)
-                .style("top", `${event.pageY}px`)
-                .style("left", `${event.pageX}px`);
-        };
-
-        const onMouseOut = function (event, d) {
-            const i = vis.displayData.indexOf(d);
-            d3.select(`#barriers-${i}`)
-                .transition()
-                .duration(200)
-                .attr("r", 50);
-            vis.tooltip.style("display", "none");
-        };
-
-        // outer circles
-        vis.circles = vis.svg
-            .selectAll(".barriers")
-            .data(vis.displayData)
+            .selectAll(".line")
+            .data(lines)
             .enter()
-            .append("circle")
-            .attr("id", (d, i) => `barriers-${i}`)
-            .attr("class", "barriers")
-            .attr("r", 50)
-            .attr("cx", (d, i) => center.x + radius * Math.cos(i * angleStep))
-            .attr("cy", (d, i) => center.y + radius * Math.sin(i * angleStep))
-            .attr("fill", FILL_COLOR)
-            .on("mouseover", onMouseOver)
-            .on("mouseout", onMouseOut);
-
-        vis.locks = vis.svg
-            .selectAll(".locks")
-            .data(vis.displayData)
-            .enter()
-            .append("g")
-            .attr("id", (d, i) => `locks-${i}`)
-            .attr("class", "locks")
-            .attr(
-                "transform",
-                (d, i) =>
-                    `translate(${
-                        center.x + radius * Math.cos(i * angleStep) - 30
-                    }, ${center.y + radius * Math.sin(i * angleStep) - 30})`
-            )
-            .html(lockSVG)
-            .on("mouseover", onMouseOver)
-            .on("mouseout", onMouseOut);
-
-        vis.accents = vis.svg
-            .selectAll(".accents")
-            .data(vis.displayData)
-            .enter()
-            .append("circle")
-            .attr("class", "accents")
-            .attr("r", 60)
-            .attr("cx", (d, i) => center.x + radius * Math.cos(i * angleStep))
-            .attr("cy", (d, i) => center.y + radius * Math.sin(i * angleStep))
+            .append("path")
+            .attr("class", "line")
             .attr("stroke", FILL_COLOR)
-            .attr("stroke-dasharray", "4,4")
             .attr("stroke-width", 2)
             .attr("fill", "none");
 
-        const arcPath = d3
-            .arc()
-            .innerRadius(65)
-            .outerRadius(0)
-            .startAngle(-Math.PI)
-            .endAngle(Math.PI * 2);
-
-        vis.labelArcs = vis.svg
-            .selectAll(".label-arcs")
-            .data(vis.displayData)
+        const node = vis.svg
+            .selectAll(".node")
+            .data(vis.nodes)
             .enter()
-            .append("path")
-            .attr("class", "label-arcs")
-            .attr("id", (d, i) => `arc${i}`)
-            .attr("d", arcPath)
-            .attr(
-                "transform",
-                (d, i) =>
-                    `translate(${
-                        center.x + radius * Math.cos(i * angleStep)
-                    }, ${center.y + radius * Math.sin(i * angleStep)})`
-            )
-            .attr("fill", "none");
+            .append("g")
+            .attr("class", "node")
+            .call(
+                d3
+                    .drag()
+                    .on("start", onDragStart)
+                    .on("drag", dragged)
+                    .on("end", onDragEnd)
+            );
 
-        vis.labels = vis.svg
-            .selectAll(".labels")
-            .data(vis.displayData)
-            .enter()
-            .append("text")
-            .attr("class", "labels")
-            .append("textPath")
-            .attr("xlink:href", (d, i) => `#arc${i}`)
-            .attr("startOffset", "50%")
+        node.append("circle")
+            .attr("id", (d, i) => `barriers-${i}`)
+            .attr("r", vis.nodeRadius)
+            .attr("fill", FILL_COLOR)
+            .attr("stroke", FILL_COLOR)
+            .on("mouseover", onMouseOver)
+            .on("mouseout", onMouseOut);
+
+        function onMouseOver(event, d) {
+            if (d.id === 0) {
+                return;
+            }
+            d3.select(`#barriers-${d.id}`)
+                .transition()
+                .duration(200)
+                .attr("r", vis.nodeRadius + 10);
+            vis.tooltip
+                .style("display", "block")
+                .html(`<h6>${d.name}</h6><p>${d.description}</p>`)
+                .style("left", event.pageX + "px")
+                .style("top", event.pageY + "px");
+        }
+
+        function onMouseOut(event, d) {
+            vis.tooltip.style("display", "none");
+            d3.select(`#barriers-${d.id}`).attr("r", vis.nodeRadius);
+        }
+
+        // add dotted line accent
+        vis.accents = node
+            .append("circle")
+            .attr("r", vis.nodeRadius + 10)
+            .attr("fill", "none")
+            .attr("stroke", FILL_COLOR)
+            .attr("stroke-width", 2)
+            .attr("stroke-dasharray", "4,4");
+
+        // add SVGs
+        node.filter((d) => d.id === 0)
+            .append("g")
+            .html(keySVG)
+            .attr("transform", "translate(-30, -30)");
+
+        node.filter((d) => d.id !== 0)
+            .append("g")
+            .html(lockSVG)
+            .attr("transform", "translate(-30, -30)");
+
+        // add labels
+        node.append("text")
+            .attr("dx", 75)
+            .attr("dy", 10)
             .text((d) => d.name)
-            .attr("fill", "white")
-            .attr("font-size", 14)
-            .attr("text-anchor", "middle");
+            .attr("fill", "white");
+
+        function ticked() {
+            vis.svg.selectAll(".line").attr("d", (d) => {
+                const dx = d.target.x - d.source.x;
+                const dy = d.target.y - d.source.y;
+                const dr = Math.sqrt(dx * dx + dy * dy);
+                return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+            });
+
+            vis.svg
+                .selectAll(".node")
+                .attr("transform", (d) => `translate(${d.x},${d.y})`);
+        }
+
+        function onDragStart(event, d) {
+            if (!event.active) {
+                simulation.alphaTarget(0.3).restart();
+            }
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function onDragEnd(event, d) {
+            if (!event.active) {
+                simulation.alphaTarget(0);
+            }
+            d.fx = null;
+            d.fy = null;
+        }
     }
 }
