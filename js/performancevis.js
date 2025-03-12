@@ -4,6 +4,8 @@ class PerformanceVis {
     constructor(_parentElement, _data) {
         this.parentElement = _parentElement;
         this.data = _data;
+
+        console.log(this.data);
         this.initVis();
     }
 
@@ -74,10 +76,16 @@ class PerformanceVis {
             .attr("id", "performance-y-axis-title")
             .attr("transform", "rotate(-90)")
             .attr("x", -(this.height / 2))
-            .attr("y", - this.margin.left + 20)
+            .attr("y", - this.margin.left + 10)
             .attr("font-size", "12px")
             .attr("fill", "white")
             .attr("text-anchor", "middle");
+
+
+        // append tooltip
+        vis.tooltip = d3.select("body").append('div')
+            .attr('class', "tooltip")
+            .attr('id', 'performance-tooltip');
 
 
         vis.wrangleData();
@@ -86,6 +94,12 @@ class PerformanceVis {
     wrangleData() {
         let vis = this;
         vis.displayData = vis.data.models;
+        // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
+        vis.displayData = vis.displayData.map(d => ({
+            ...d,
+            price_per_input_token: (d.price_per_input_token * 1_000_000).toFixed(2),
+            price_per_output_token: (d.price_per_output_token * 1_000_000).toFixed(2)
+        }));
         console.log(vis.displayData);
         this.updateVis();
     }
@@ -97,9 +111,9 @@ class PerformanceVis {
         let yOption = d3.select("#performance-type").property("value");
 
         // Update y-axis label
-        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Throughput" : "Latency");
+        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Performance speed: throughput / s" : "Response Time: latency (ms)");
 
-       
+
 
         // Update domains
         vis.x.domain(vis.displayData.map(d => d.model_id));
@@ -112,6 +126,41 @@ class PerformanceVis {
         vis.bars.enter().append("rect")
             .attr("class", "bar")
             .merge(vis.bars)
+            .on("mouseover", function (event, d) {
+                 // hover and give diming effect to other bars and ticks
+                d3.select(this).attr("stroke-width", 6);
+                d3.selectAll("rect").classed("dim", true);
+                d3.select(this).classed("dim", false);
+
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + "px")
+                    .style("top", event.pageY + "px")
+                    .html( `
+                        <h5>${d.model_id}</h5>
+                        <strong>Provider:</strong> ${d.provider}
+                        <br>
+                        <strong>Throughput:</strong> ${d.throughput} / s
+                        <br>
+                        <strong>Latency</strong> ${d.latency} ms
+                        <br>
+                        <strong>Price per input token ($/1M tokens):</strong> $${d.price_per_input_token} 
+                        <br>
+                        <strong>Price per output token ($/1M tokens):</strong> $${d.price_per_output_token}
+
+                    `);
+
+            })
+            .on("mouseout", function () {
+                // unhover and remove diming effect 
+                d3.select(this).attr("stroke-width", 2);
+                d3.selectAll("rect ").classed("dim", false);
+                vis.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            })
             .attr("fill", d => vis.colorScale(d.provider))
             .attr("x", d => vis.x(d.model_id))
             .attr("y", vis.height)
@@ -131,5 +180,8 @@ class PerformanceVis {
             .attr("transform", "rotate(-45)")
             .style("text-anchor", "end");
         vis.yAxisGroup.call(vis.yAxis);
+
+
+
     }
 }

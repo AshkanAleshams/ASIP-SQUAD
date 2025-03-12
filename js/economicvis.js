@@ -4,9 +4,10 @@ class EconomicVis {
     constructor(_parentElement, _data) {
         this.parentElement = _parentElement;
         this.data = _data;
+        console.log(this.data);
         this.initVis();
 
-        
+
     }
 
     initVis() {
@@ -75,11 +76,16 @@ class EconomicVis {
             .attr("id", "economic-y-axis-title")
             .attr("transform", "rotate(-90)")
             .attr("x", -(this.height / 2))
-            .attr("y", - this.margin.left + 20)
+            .attr("y", - this.margin.left + 10)
             .attr("font-size", "12px")
             .attr("fill", "white")
             .attr("text-anchor", "middle");
 
+
+        // append tooltip
+        vis.tooltip = d3.select("body").append('div')
+            .attr('class', "tooltip")
+            .attr('id', 'economic-tooltip');
 
 
 
@@ -89,6 +95,12 @@ class EconomicVis {
     wrangleData() {
         let vis = this;
         vis.displayData = vis.data.models;
+        // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
+        vis.displayData = vis.displayData.map(d => ({
+            ...d,
+            price_per_input_token: (d.price_per_input_token * 1_000_000).toFixed(2),
+            price_per_output_token: (d.price_per_output_token * 1_000_000).toFixed(2)
+        }));
         console.log(vis.displayData);
         this.updateVis();
     }
@@ -111,10 +123,10 @@ class EconomicVis {
 
         // Update domains
         vis.x.domain(vis.displayData.map(d => d.model_id));
-        vis.y.domain([0, d3.max(vis.displayData, d => d[yOption] * 1_000_000)]); 	// dynamic
+        vis.y.domain([0, d3.max(vis.displayData, d => d[yOption])]); 	// dynamic
 
         // Update bars
-        vis.bars = vis.svg.selectAll("rect").data(vis.displayData, d => d.model_id);
+        vis.bars = vis.svg.selectAll("rect").data(vis.displayData, (d) => d.model_id);
 
         // Enter 
         vis.bars.enter().append("rect")
@@ -124,12 +136,44 @@ class EconomicVis {
             .attr("x", d => vis.x(d.model_id))
             .attr("y", vis.height)
             .attr("height", 0)
+            .attr("width", vis.x.bandwidth())
+            .attr("height", d => vis.height - vis.y(d[yOption]))
+            .on("mouseover", function (event, d) {
+                d3.select(this).attr("stroke-width", 6);
+                d3.selectAll("rect").classed("dim", true);
+                d3.select(this).classed("dim", false);
+
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + "px")
+                    .style("top", event.pageY + "px")
+                    .html( `
+                        <h5>${d.model_id}</h5>
+                        <strong>Provider:</strong> ${d.provider}
+                        <br>
+                        <strong>Throughput:</strong> ${d.throughput}
+                        <br>
+                        <strong>Latency</strong> ${d.latency}
+                        <br>
+                        <strong>Price per input token ($/ 1M tokens):</strong> $${d.price_per_input_token}
+                        <br>
+                        <strong>Price per output token ($/ 1M tokens):</strong> $${d.price_per_output_token}
+
+                    `);
+            })
+            .on("mouseout", function () {
+                d3.select(this).attr("stroke-width", 2);
+                d3.selectAll("rect").classed("dim", false);
+                vis.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            })
             .transition()
             .duration(1000)
-            
-            .attr("y", d => vis.y(d[yOption] * 1_000_000))
-            .attr("width", vis.x.bandwidth())
-            .attr("height", d => vis.height - vis.y(d[yOption] * 1_000_000))
+            .attr("y", d => vis.y(d[yOption]));
+
 
         // Exit
         vis.bars.exit().remove();
@@ -140,5 +184,6 @@ class EconomicVis {
             .attr("transform", "rotate(-45)")
             .style("text-anchor", "end");
         vis.yAxisGroup.call(vis.yAxis);
+
     }
 }
