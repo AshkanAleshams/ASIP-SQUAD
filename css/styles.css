@@ -89,7 +89,13 @@ path.dim {
     transition: opacity 0.3s ease;
 }
 
-#benchmark-tooltip {
+rect.dim {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+
+#benchmark-tooltip{
     display: none;
     background-color: #1c183288;
     color: rgb(255, 255, 255);
@@ -98,4 +104,14 @@ path.dim {
     border: 1px solid #38cbdc;
     z-index: 1;
     width: max-content;
+}
+
+.tooltip {
+    background-color: #1c183288;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #38cbdc;
+    z-index: 1;
+    width: 200px;
 }

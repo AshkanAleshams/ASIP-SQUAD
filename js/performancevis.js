@@ -80,6 +80,12 @@ class PerformanceVis {
             .attr("text-anchor", "middle");
 
 
+        // append tooltip
+        vis.tooltip = d3.select("body").append('div')
+            .attr('class', "tooltip")
+            .attr('id', 'performance-tooltip');
+
+
         vis.wrangleData();
     }
 
@@ -99,7 +105,7 @@ class PerformanceVis {
         // Update y-axis label
         d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Throughput" : "Latency");
 
-       
+
 
         // Update domains
         vis.x.domain(vis.displayData.map(d => d.model_id));
@@ -112,6 +118,36 @@ class PerformanceVis {
         vis.bars.enter().append("rect")
             .attr("class", "bar")
             .merge(vis.bars)
+            .on("mouseover", function (event, d) {
+                d3.select(this).attr("stroke-width", 6);
+                d3.selectAll("rect").classed("dim", true);
+                d3.select(this).classed("dim", false);
+
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + "px")
+                    .style("top", event.pageY + "px")
+                    .html(`
+                <div >
+                    <h3>${d.state}<h3>
+                    <h4> Population:  ${d.population}<h4>
+                    <h4> Cases (absolute): ${d.absCases}</h4> 
+                    <h4> Deaths (absolute): ${d.absDeaths} <h4>    
+                    <h4> Cases (relative): ${d.relCases}</h4>
+                    <h4> Deaths (relative): ${d.relDeaths}</h4>
+                </div>`);
+
+            })
+            .on("mouseout", function () {
+                d3.select(this).attr("stroke-width", 2);
+                d3.selectAll("rect ").classed("dim", false);
+
+                vis.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            })
             .attr("fill", d => vis.colorScale(d.provider))
             .attr("x", d => vis.x(d.model_id))
             .attr("y", vis.height)
@@ -131,5 +167,8 @@ class PerformanceVis {
             .attr("transform", "rotate(-45)")
             .style("text-anchor", "end");
         vis.yAxisGroup.call(vis.yAxis);
+
+
+
     }
 }

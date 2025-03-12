@@ -6,7 +6,7 @@ class EconomicVis {
         this.data = _data;
         this.initVis();
 
-        
+
     }
 
     initVis() {
@@ -81,6 +81,11 @@ class EconomicVis {
             .attr("text-anchor", "middle");
 
 
+        // append tooltip
+        vis.tooltip = d3.select("body").append('div')
+            .attr('class', "tooltip")
+            .attr('id', 'economic-tooltip');
+
 
 
         vis.wrangleData();
@@ -114,7 +119,7 @@ class EconomicVis {
         vis.y.domain([0, d3.max(vis.displayData, d => d[yOption] * 1_000_000)]); 	// dynamic
 
         // Update bars
-        vis.bars = vis.svg.selectAll("rect").data(vis.displayData, d => d.model_id);
+        vis.bars = vis.svg.selectAll("rect").data(vis.displayData, (d) => d.model_id);
 
         // Enter 
         vis.bars.enter().append("rect")
@@ -124,12 +129,40 @@ class EconomicVis {
             .attr("x", d => vis.x(d.model_id))
             .attr("y", vis.height)
             .attr("height", 0)
-            .transition()
-            .duration(1000)
-            
-            .attr("y", d => vis.y(d[yOption] * 1_000_000))
             .attr("width", vis.x.bandwidth())
             .attr("height", d => vis.height - vis.y(d[yOption] * 1_000_000))
+            .on("mouseover", function (event, d) {
+                d3.select(this).attr("stroke-width", 6);
+                d3.selectAll("rect").classed("dim", true);
+                d3.select(this).classed("dim", false);
+
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + "px")
+                    .style("top", event.pageY + "px")
+                    .html(`
+                        <div >
+                            <h3>${d.state}<h3>
+                            <h4> Population:  ${d.population}<h4>
+                            <h4> Cases (absolute): ${d.absCases}</h4> 
+                            <h4> Deaths (absolute): ${d.absDeaths} <h4>    
+                            <h4> Cases (relative): ${d.relCases}</h4>
+                            <h4> Deaths (relative): ${d.relDeaths}</h4>
+                        </div>`);
+            })
+            .on("mouseout", function () {
+                d3.select(this).attr("stroke-width", 2);
+                d3.selectAll("rect").classed("dim", false);
+                vis.tooltip
+                .style("opacity", 0)
+                .style("left", 0)
+                .style("top", 0)
+                .html(``);
+            })
+            .transition()
+            .duration(1000)
+            .attr("y", d => vis.y(d[yOption] * 1_000_000));
+
 
         // Exit
         vis.bars.exit().remove();
@@ -140,5 +173,6 @@ class EconomicVis {
             .attr("transform", "rotate(-45)")
             .style("text-anchor", "end");
         vis.yAxisGroup.call(vis.yAxis);
+
     }
 }
