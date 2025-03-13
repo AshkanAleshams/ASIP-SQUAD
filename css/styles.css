@@ -84,6 +84,10 @@ section {
     font-weight: 500;
 }
 
+a {
+    color: #38cbdc;
+}
+
 .form-select:hover {
     background-color: #38cbdc;
     color: #1c1832;
