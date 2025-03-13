@@ -2,7 +2,7 @@ class CompareVis {
     constructor(_parentElement, _data) {
         this.parentElement = _parentElement;
         this.data = _data;
-        
+
         this.initVis();
     }
 
@@ -51,7 +51,7 @@ class CompareVis {
             .attr("font-size", "12px")
             .attr("fill", "white")
             .attr("text-anchor", "middle");
-            
+
 
         // Y-Axis label
         vis.svg.append("text")
@@ -98,10 +98,13 @@ class CompareVis {
         // Update y-axis label
         d3.select("#compare-y-axis-title").text(performanceType == 'throughput' ? "Processing speed: throughput / s" : "Response Time: latency (ms)");
 
-        // Update domains
-        vis.x.domain([0, d3.max(vis.displayData, d => +d[tokenType])]);
-        vis.y.domain([0, d3.max(vis.displayData, d => +d[performanceType])]);
+        // Calculate padding
+        let xPadding = (d3.max(vis.displayData, d => +d[tokenType]) - d3.min(vis.displayData, d => +d[tokenType])) * 0.05;
+        let yPadding = (d3.max(vis.displayData, d => +d[performanceType]) - d3.min(vis.displayData, d => +d[performanceType])) * 0.05;
 
+        // Update domains with padding
+        vis.x.domain([d3.min(vis.displayData, d => +d[tokenType]) - xPadding, d3.max(vis.displayData, d => +d[tokenType]) + xPadding]);
+        vis.y.domain([d3.min(vis.displayData, d => +d[performanceType]) - yPadding, d3.max(vis.displayData, d => +d[performanceType]) + yPadding]);
         // Update circles
         vis.circles = vis.svg.selectAll("circle").data(vis.displayData, d => d.model_id);
 
@@ -114,7 +117,7 @@ class CompareVis {
                 d3.select(this).attr("stroke-width", 2).attr("stroke", "black");
                 d3.selectAll("circle").classed("dim", true);
                 d3.select(this).classed("dim", false);
-                
+
                 vis.tooltip
                     .style("opacity", 1)
                     .style("left", event.pageX + "px")
