@@ -8,3 +8,20 @@ var typed = new Typed(".typing", {
 });
 
 dotNav("section", "easeInOutQuint");
+
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+// fade box transition
+gsap.fromTo(".fade-box", {
+    opacity: 0,
+}, {
+    opacity: 1,
+    duration: 1,
+    scrollTrigger: {
+        trigger: ".fade-box",
+        start: "top 80%",
+        end: "top 50%",
+        scrub: true,
+    },
+});
+

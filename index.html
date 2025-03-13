@@ -25,31 +25,42 @@
         <!-- Custom CSS code -->
         <link rel="stylesheet" href="css/styles.css" />
         <link rel="stylesheet" href="css/nav.css" />
+        <link rel="stylesheet" href="css/scroll.css" />
     </head>
     <body>
         <div class="container">
             <nav id="dot-nav"></nav>
             <section id="page1" class="vertical-container">
-                <span>
+                <span id="main-title">
                     <h1 class="typing"></h1>
                 </span>
-                <div class="vertical-container">
+                <div id="main-content">
                     <div id="main-message">
                         Entrepreneurs seeking to enter the LLM space must
                         strategically balance token cost with performance
-                        metrics of the tokens...
+                        metrics of the tokens like latency and throughput based
+                        on the application's specific needs. Large, complex
+                        models like those with '70b' parameters offer high
+                        throughput but come at a higher cost, making models like
+                        Deepseek more economically viable for high-volume,
+                        cost-sensitive applications, and highlighting the
+                        questionable ROI of premium models like Claude in such
+                        scenarios, while also being mindful that size alone
+                        doesn't guarantee speed, as demonstrated by the
+                        unexpected latency in certain 'mini' models.
                     </div>
                     <div>
                         <a href="#page2">→ Here are 4 visualizations to help</a>
                     </div>
                 </div>
             </section>
-
             <section id="page2" class="vertical-container">
-                <div class="title-text">
-                    What are the barriers to entry in the LLM industry?
+                <div class="fade-box">
+                    <div class="title-text">
+                        What are the barriers to entry in the LLM industry?
+                    </div>
+                    <div><a href="#page3">→ Next</a></div>
                 </div>
-                <div><a href="#page3">→ Next</a></div>
             </section>
             <section id="page3">
                 <div class="col">
@@ -67,7 +78,6 @@
             </section>
             <section id="page5">
                 <!-- economical vis-->
-
                 <div class="col-4">
                     <div class="title-text">
                         How does the cost of LLMs compare?
@@ -159,8 +169,9 @@
                             <option value="throughput">Processing speed</option>
                             <option value="latency">Response Time</option>
                         </select>
-                        &nbsp;
-                        <strong> VS </strong>
+                        <div class="mb-3 mt-3">
+                            <strong> VS </strong>
+                        </div>
                         <select
                             class="form-select"
                             id="compare-token-type"
@@ -207,14 +218,16 @@
                                 </option>
                                 <option value="co2cost">CO2 Cost</option>
                             </select>
-                            <button
-                                type="button"
-                                id="benchmark-sort"
-                                class="sort-btn"
-                                onclick="sortBenchmarkVis()"
-                            >
-                                Sort
-                            </button>
+                            <div class="vertical-container">
+                                <button
+                                    type="button"
+                                    id="benchmark-sort"
+                                    class="sort-btn"
+                                    onclick="sortBenchmarkVis()"
+                                >
+                                    Sort
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -254,6 +267,10 @@
         <!-- d3 -->
         <script src="https://d3js.org/d3.v7.min.js"></script>
         <script src="libs/dot-nav-min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"></script>
 
         <!-- Visualization objects -->
         <script src="js/barriersvis.js"></script>
