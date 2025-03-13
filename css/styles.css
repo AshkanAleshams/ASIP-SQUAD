@@ -4,6 +4,31 @@ body {
     font-family: "Roboto", sans-serif;
 }
 
+#back-to-top {
+    /* display: none; Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    outline: none; /* Remove outline */
+    background-color: transparent;
+    background: transparent;
+    color: #38cbdc;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #38cbdc;
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 18px; /* Increase font size */
+}
+
+#back-to-top:hover {
+    background-color: #38cbdc;
+    color: #1c1832;
+    transition: all 0.3s;
+}
+
 h1,
 .typed-cursor {
     color: white;
