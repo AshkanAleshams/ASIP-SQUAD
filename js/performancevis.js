@@ -111,7 +111,7 @@ class PerformanceVis {
         let yOption = d3.select("#performance-type").property("value");
 
         // Update y-axis label
-        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Performance speed: throughput / s" : "Response Time: latency (ms)");
+        d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Processing speed: throughput / s" : "Response Time: latency (ms)");
 
 
 

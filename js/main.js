@@ -1,6 +1,6 @@
 
 // global 
-let barriersToEntryVis, benchmarkVis, economicVis, performanceVis;
+let barriersToEntryVis, benchmarkVis, economicVis, performanceVis, compareVis;
 
 // Date parser to convert strings to date objects
 let parseDate = d3.timeParse("%Y-%m-%d");
@@ -33,6 +33,7 @@ function renderVisualizations(data) {
     benchmarkVis = new BenchmarkVis("benchmark-vis", OpenData);
     economicVis = new EconomicVis("economic-vis", LLMStatsData);
     performanceVis = new PerformanceVis("performance-vis", LLMStatsData);
+    compareVis = new CompareVis("compare-vis", LLMStatsData);
 }
 
 function onSelectChange() {
@@ -46,4 +47,8 @@ function updateEconomicVis(){
 
 function updatePerformanceVis(){
     performanceVis.wrangleData();
+}
+
+function updateCompareVis(){
+    compareVis.wrangleData();
 }

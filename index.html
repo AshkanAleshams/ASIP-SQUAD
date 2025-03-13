@@ -114,12 +114,51 @@
                     <div id="performance-vis"></div>
                 </div>
             </section>
-            <section id="page6" class="vertical-container">
+            <section id="page6" >
+                <!-- New Visualization: compareVis -->
+            
+                <div class="col-4">
+                    <div class="title-text">
+                        How does the performance of LLMs compare to their cost?
+                    </div>
+                    &nbsp;
+                    <div class="row form-group">
+                        <!-- Select box to choose the comaprisopn type -->
+                        <select
+                            class="form-select"
+                            id="compare-performance-type"
+                            onchange="updateCompareVis()"
+                        >
+                            <option value="throughput">Processing speed</option>
+                            <option value="latency">Response Time</option>
+                        </select>
+                        &nbsp;
+                        <strong> VS </strong>
+                        <select
+                            class="form-select"
+                            id="compare-token-type"
+                            onchange="updateCompareVis()"
+                        >
+                            <option value="price_per_input_token">
+                                Price of Input Tokens
+                            </option>
+                            <option value="price_per_output_token">
+                                Price of Output Tokens
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div id="compare-vis"></div>
+                </div>
+            </section>
+
+            <section id="page7" class="vertical-container">
                 <div class="title-text">
                     How scalable are LLMS for high volume use cases?
                 </div>
             </section>
-            <section id="page7">
+            <section id="page8">
                 <div class="vis-container row">
                     <div id="benchmark-vis">
                         <div id="benchmark-dropdown">
@@ -175,6 +214,7 @@
         <script src="js/benchmarkvis.js"></script>
         <script src="js/economicvis.js"></script>
         <script src="js/performancevis.js"></script>
+        <script src="js/comparevis.js"></script>
 
         <!-- Load data, create visualizations -->
         <script src="js/main.js"></script>

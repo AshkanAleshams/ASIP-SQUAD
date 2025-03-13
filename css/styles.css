@@ -91,15 +91,19 @@ section {
 }
 
 path.dim {
-    opacity: 0.5;
+    opacity: 0.25;
     transition: opacity 0.3s ease;
 }
 
 rect.dim {
-    opacity: 0.5;
+    opacity: 0.25;
     transition: opacity 0.3s ease;
 }
 
+circle.dim {
+    opacity: 0.25;
+    transition: opacity 0.3s ease;
+}
 
 #benchmark-tooltip{
     display: none;
