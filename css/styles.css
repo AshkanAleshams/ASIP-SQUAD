@@ -184,3 +184,8 @@ circle.dim {
     flex-direction: column;
     text-align: center;
 }
+
+#main-title {
+    text-align: center;
+    width: 100%;
+}
