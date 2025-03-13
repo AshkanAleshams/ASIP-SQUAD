@@ -170,3 +170,17 @@ circle.dim {
     z-index: 1;
     width: 200px;
 }
+
+#main-message {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+#main-content {
+    padding: 0px 20px 0px 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
