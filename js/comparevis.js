@@ -38,7 +38,7 @@ class CompareVis {
 
         vis.colorScale = d3.scaleOrdinal()
             .domain(["OpenAI", "Anthropic", "Google", "DeepSeek", "Cerebras", 'Cohere'])
-            .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "orange"]);
+            .range(["#a790f0", "#39cadc", "#ff6f61", "#f5a623", "#7eced3", "#d6e9ff"]);
 
         // Append x-axis
         vis.xAxis = d3.axisBottom().scale(vis.x);
