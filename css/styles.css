@@ -107,7 +107,7 @@ circle.dim {
 
 #benchmark-tooltip{
     display: none;
-    background-color: #1c183288;
+    background-color: #1c1832;
     color: rgb(255, 255, 255);
     padding: 10px;
     border-radius: 8px;
@@ -117,7 +117,7 @@ circle.dim {
 }
 
 .tooltip {
-    background-color: #1c183288;
+    background-color: #1c1832;
     color: rgb(255, 255, 255);
     padding: 10px;
     border-radius: 8px;

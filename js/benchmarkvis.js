@@ -82,7 +82,10 @@ class BenchmarkVis {
 
         vis.color = d3.scaleSequential(d3.interpolateCool);
 
-        vis.tooltip = d3.select("#benchmark-tooltip");
+        // append tooltip
+        vis.tooltip = d3.select("body").append('div')
+            .attr('class', "tooltip")
+            .attr('id', 'benchmark-tooltip');
 
         vis.wrangleData();
     }
@@ -147,12 +150,31 @@ class BenchmarkVis {
                 d3.selectAll("path").classed("dim", true);
                 d3.select(this).classed("dim", false);
 
-                renderTooltip(event, d);
+                vis.tooltip
+                    .style("opacity", 1)
+                    .style("left", `${event.pageX}px`)
+                    .style("top", `${event.pageY}px`)
+                    .style("display", "inline-block")
+                    .html(
+                        `
+                        <h5>${d.model}</h5>
+                        <strong>Average:</strong> ${d.average}
+                        <br>
+                        <strong>CO2 Cost:</strong> ${d.co2cost}
+                        <br>
+                        <strong>Params:</strong> ${d.params}
+                    `
+                    );
+
             })
             .on("mouseout", function () {
                 d3.select(this).attr("stroke-width", 2);
                 d3.selectAll("path").classed("dim", false);
-                vis.tooltip.style("display", "none");
+                vis.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
             });
 
         bars = barsEnter.merge(bars);
@@ -163,21 +185,5 @@ class BenchmarkVis {
             .attr("fill", (d) => vis.color(d[selectedCategory]))
             .attr("stroke", (d) => vis.color(d[selectedCategory]));
 
-        const renderTooltip = (event, d) => {
-            vis.tooltip
-                .style("left", `${event.pageX + 10}px`)
-                .style("top", `${event.pageY}px`)
-                .style("display", "inline-block")
-                .html(
-                    `
-                        <h5>${d.model}</h5>
-                        <strong>Average:</strong> ${d.average}
-                        <br>
-                        <strong>CO2 Cost:</strong> ${d.co2cost}
-                        <br>
-                        <strong>Params:</strong> ${d.params}
-                    `
-                );
-        };
     }
 }
