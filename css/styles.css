@@ -31,6 +31,7 @@ body {
 
 h1,
 .typed-cursor {
+    display: inline-block;
     color: white;
     font-family: "Inter", sans-serif;
     font-size: 80px;

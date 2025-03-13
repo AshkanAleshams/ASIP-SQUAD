@@ -1,8 +1,7 @@
 // Title animations
 var typed = new Typed(".typing", {
-    strings: ["Hello ASIP...", "Welcome to the story"],
-    typeSpeed: 25,
-    loop: true,
+    strings: ["Visualizing the LLM Industry"],
+    typeSpeed: 40,
     backSpeed: 30,
     startDelay: 500,
     backDelay: 500,
