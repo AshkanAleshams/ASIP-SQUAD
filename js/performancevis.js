@@ -36,6 +36,17 @@ class PerformanceVis {
                 "translate(" + vis.margin.left + "," + vis.margin.top + ")"
             );
 
+         //tile
+         vis.svg.append('g')
+         .attr('class', 'title')
+         .attr('id', 'compare-title')
+         .append('text')
+         .text('Comparison of the performance of LLMs')
+         .attr('transform', `translate(${vis.width / 2}, 0)`)
+         .attr("font-size", "20px")
+         .attr("fill", "white")
+         .attr('text-anchor', 'middle');
+
 
         // Scales
         vis.x = d3.scaleBand()

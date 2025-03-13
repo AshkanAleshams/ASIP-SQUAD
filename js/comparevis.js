@@ -21,6 +21,17 @@ class CompareVis {
             .append("g")
             .attr("transform", `translate(${vis.margin.left},${vis.margin.top})`);
 
+        //tile
+        vis.svg.append('g')
+            .attr('class', 'title')
+            .attr('id', 'compare-title')
+            .append('text')
+            .text('Comparison of performance vs cost of LLMs')
+            .attr('transform', `translate(${vis.width / 2}, 20)`)
+            .attr("font-size", "20px")
+            .attr("fill", "white")
+            .attr('text-anchor', 'middle');
+
         // Scales
         vis.x = d3.scaleLinear().range([0, vis.width]);
         vis.y = d3.scaleLinear().range([vis.height, 0]);
