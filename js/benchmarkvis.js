@@ -67,7 +67,7 @@ class BenchmarkVis {
         // put in the middle of the circle
         d3.select("#benchmark-dropdown")
             .style("left", `${vis.width / 2 + 10}px`)
-            .style("top", `${vis.height / 4 + 300}px`)
+            .style("top", `${vis.height / 4 + 350}px`)
             .style("transform", "translate(-50%, -50%)")
             .style("position", "absolute");
 
@@ -94,7 +94,7 @@ class BenchmarkVis {
         let vis = this;
 
         // clean data
-        vis.displayData.forEach((d) => {
+        vis.data.forEach((d) => {
             d.params = d["#Params (B)"];
             d.co2cost = d["CO cost (kg)"];
             d.average = d.Average;
@@ -102,14 +102,25 @@ class BenchmarkVis {
             d.official = d["Official Providers"];
         });
 
-        vis.displayData = vis.displayData.filter((d) => d.official === true);
+        vis.data = vis.data.filter((d) => d.official === true);
 
-        vis.displayData = vis.displayData.slice(0, 200);
+        vis.data = vis.data.slice(0, 200);
+
+        vis.displayData = vis.data;
+
         vis.updateVis();
     }
 
     updateVis() {
         let vis = this;
+
+        console.log(sorted);
+
+        if (sorted) {
+            vis.displayData.sort((a, b) => b[selectedCategory] - a[selectedCategory]);
+        } else {
+            vis.displayData = [...vis.data];
+        }
 
         vis.scale = 1;
 
@@ -157,8 +168,8 @@ class BenchmarkVis {
                     .style("display", "inline-block")
                     .html(
                         `
-                        <h5>${d.model}</h5>
-                        <strong>Average:</strong> ${d.average}
+                        <h5>Model: ${d.model}</h5>
+                        <strong>Average Benchmark Score:</strong> ${d.average}
                         <br>
                         <strong>CO2 Cost:</strong> ${d.co2cost}
                         <br>

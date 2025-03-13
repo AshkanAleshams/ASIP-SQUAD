@@ -52,3 +52,12 @@ function updatePerformanceVis(){
 function updateCompareVis(){
     compareVis.wrangleData();
 }
+
+let sorted = false;
+
+function sortBenchmarkVis(){
+    sorted = !sorted;
+    const button = document.querySelector(".sort-btn");
+    button.innerHTML = sorted ? "Unsort" : "Sort";
+    benchmarkVis.updateVis();
+}

@@ -119,6 +119,22 @@ a {
     transition: all 0.3s;
 }
 
+.sort-btn {
+    background-color: transparent;
+    color: #38cbdc;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #38cbdc;
+    text-align: center;
+    font-size: 18px;
+}
+
+.sort-btn:hover {
+    background-color: #38cbdc;
+    color: #1c1832;
+    transition: all 0.3s;
+}
+
 path.dim {
     opacity: 0.25;
     transition: opacity 0.3s ease;
