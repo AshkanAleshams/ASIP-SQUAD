@@ -114,9 +114,9 @@ class BenchmarkVis {
     updateVis() {
         let vis = this;
 
-        console.log(sorted);
+        console.log(benchmarkSorted);
 
-        if (sorted) {
+        if (benchmarkSorted) {
             vis.displayData.sort((a, b) => b[selectedCategory] - a[selectedCategory]);
         } else {
             vis.displayData = [...vis.data];

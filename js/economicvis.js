@@ -106,14 +106,16 @@ class EconomicVis {
 
     wrangleData() {
         let vis = this;
-        vis.displayData = vis.data.models;
+        
         // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
-        vis.displayData = vis.displayData.map(d => ({
+        vis.data = vis.data.map(d => ({
             ...d,
             price_per_input_token: (d.price_per_input_token * 1_000_000).toFixed(2),
             price_per_output_token: (d.price_per_output_token * 1_000_000).toFixed(2)
         }));
-        console.log(vis.displayData);
+        console.log(vis.data);
+
+        vis.displayData = vis.data
         this.updateVis();
     }
 
@@ -127,9 +129,11 @@ class EconomicVis {
         d3.select("#economic-y-axis-title").text(yOption == 'price_per_input_token' ? "Price of input tokens ($/ 1M tokens)" : "Price of output tokens ($/ 1M tokens)");
 
         // sort
-        let sortOption = d3.select('#sort-type').property('value');
-        if (sortOption === 'sorted') {
+        if (economicSorted) {
             vis.displayData.sort((a, b) => b[yOption] - a[yOption]);
+        }
+        else {
+            vis.displayData = [...vis.data];
         }
 
 
@@ -160,7 +164,7 @@ class EconomicVis {
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px")
                     .html( `
-                        <h5>${d.model_id}</h5>
+                        <h5>${d.model_name}</h5>
                         <strong>Provider:</strong> ${d.provider}
                         <br>
                         <strong>Throughput:</strong> ${d.throughput}
@@ -194,7 +198,8 @@ class EconomicVis {
         vis.xAxisGroup.call(vis.xAxis)
             .selectAll("text")
             .attr("transform", "rotate(-45)")
-            .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .text(d => vis.displayData.find(data => data.model_id === d)?.model_name || d);
         vis.yAxisGroup.call(vis.yAxis);
 
     }

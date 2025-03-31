@@ -2,6 +2,10 @@
 // global 
 let barriersToEntryVis, benchmarkVis, economicVis, performanceVis, compareVis;
 
+let benchmarkSorted = false;
+let economicSorted = false;
+let performanceSorted = false;
+
 // Date parser to convert strings to date objects
 let parseDate = d3.timeParse("%Y-%m-%d");
 
@@ -26,7 +30,7 @@ let selectedCategory = "average";
 
 function renderVisualizations(data) {
     BarrierData = data[0];
-    LLMStatsData = data[1];
+    LLMStatsData = data[1].models;
     OpenData = data[2];
 
     barriersToEntryVis = new BarriersVis("barriers-vis", BarrierData);
@@ -53,11 +57,25 @@ function updateCompareVis(){
     compareVis.wrangleData();
 }
 
-let sorted = false;
 
 function sortBenchmarkVis(){
-    sorted = !sorted;
-    const button = document.querySelector(".sort-btn");
-    button.innerHTML = sorted ? "Unsort" : "Sort";
+    benchmarkSorted = !benchmarkSorted;
+    const button = document.querySelector("#benchmark-sort");
+    button.innerHTML = benchmarkSorted ? "Unsort" : "Sort";
     benchmarkVis.updateVis();
 }
+
+function sortEconomicVis(){
+    economicSorted = !economicSorted;
+    const button = document.querySelector("#economic-sort");
+    button.innerHTML = economicSorted ? "Unsort" : "Sort";
+    economicVis.updateVis();
+}
+
+function sortPerformanceVis(){
+    performanceSorted = !performanceSorted;
+    const button = document.querySelector("#performance-sort");
+    button.innerHTML = performanceSorted ? "Unsort" : "Sort";
+    performanceVis.updateVis();
+}
+
