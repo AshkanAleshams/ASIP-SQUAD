@@ -176,7 +176,7 @@ class CompareVis {
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px")
                     .html(`
-                        <h5>${d.model_id}</h5>
+                        <h5>${d.model_name}</h5>
                         <strong>Provider:</strong> ${d.provider}
                         <br>
                         <strong>Throughput:</strong> ${d.throughput}

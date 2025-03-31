@@ -154,7 +154,7 @@ class PerformanceVis {
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px")
                     .html(`
-                        <h5>${d.model_id}</h5>
+                        <h5>${d.model_name}</h5>
                         <strong>Provider:</strong> ${d.provider}
                         <br>
                         <strong>Throughput:</strong> ${d.throughput} / s
@@ -195,7 +195,8 @@ class PerformanceVis {
         vis.xAxisGroup.call(vis.xAxis)
             .selectAll("text")
             .attr("transform", "rotate(-45)")
-            .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .text(d => vis.displayData.find(data => data.model_id === d)?.model_name || d);
         vis.yAxisGroup.call(vis.yAxis);
 
 
