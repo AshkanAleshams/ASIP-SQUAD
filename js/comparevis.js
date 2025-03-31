@@ -80,6 +80,48 @@ class CompareVis {
             .attr('class', "tooltip")
             .attr('id', 'compare-tooltip');
 
+        // Append brush component here
+        vis.brushGroup = vis.svg.append("g").attr("class", "brush");
+
+        // Add zoom component
+        vis.xOrig = vis.x; // save original scale
+
+        // vis.resetButton = d3.select("#reset-button");
+
+        vis.zoomFunction = function (event) {
+            // vis.resetButton.style("display", "block")
+            console.log("zooming");
+            let xScaleModified = event.transform.rescaleX(vis.xOrig);
+            vis.x = xScaleModified;
+            vis.xAxis.scale(vis.x);
+            // if (vis.currentBrushRegion) {
+            //     vis.brushGroup.call(
+            //         vis.brush.move,
+            //         vis.currentBrushRegion.map(vis.x)
+            //     );
+            // }
+            vis.updateVis();
+        }; // function that is being called when user zooms
+
+        vis.zoom = d3.zoom().on("zoom", vis.zoomFunction).scaleExtent([1, 20]);
+
+        // const resetZoom = () => {
+        //     vis.resetButton.style("display", "none");
+        //     vis.x = vis.xOrig;
+        //     vis.xAxis.scale(vis.x);
+        //     vis.updateVis();
+        // };
+
+        // vis.resetButton.on("click", function () {
+        //     resetZoom();
+        // });
+
+        // disable mousedown and drag in zoom, when you activate zoom (by .call)
+        vis.xAxisGroup
+            .call(vis.zoom)
+            .on("mousedown.zoom", null)
+            .on("touchstart.zoom", null);
+
         vis.wrangleData();
     }
 
