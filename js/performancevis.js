@@ -36,16 +36,16 @@ class PerformanceVis {
                 "translate(" + vis.margin.left + "," + vis.margin.top + ")"
             );
 
-         //tile
-         vis.svg.append('g')
-         .attr('class', 'title')
-         .attr('id', 'compare-title')
-         .append('text')
-         .text('Comparison of the performance of LLMs')
-         .attr('transform', `translate(${vis.width / 2}, 0)`)
-         .attr("font-size", "20px")
-         .attr("fill", "white")
-         .attr('text-anchor', 'middle');
+        //tile
+        vis.svg.append('g')
+            .attr('class', 'title')
+            .attr('id', 'compare-title')
+            .append('text')
+            .text('Comparison of the performance of LLMs')
+            .attr('transform', `translate(${vis.width / 2}, 0)`)
+            .attr("font-size", "20px")
+            .attr("fill", "white")
+            .attr('text-anchor', 'middle');
 
 
         // Scales
@@ -104,14 +104,14 @@ class PerformanceVis {
 
     wrangleData() {
         let vis = this;
-        vis.displayData = vis.data;
+
         // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
-        vis.displayData = vis.displayData.map(d => ({
+        vis.data = vis.data.map(d => ({
             ...d,
             price_per_input_token: (d.price_per_input_token * 1_000_000).toFixed(2),
             price_per_output_token: (d.price_per_output_token * 1_000_000).toFixed(2)
         }));
-        console.log(vis.displayData);
+        vis.displayData = vis.data;
         this.updateVis();
     }
 
@@ -124,7 +124,13 @@ class PerformanceVis {
         // Update y-axis label
         d3.select("#performance-y-axis-title").text(yOption == 'throughput' ? "Processing speed: throughput / s" : "Response Time: latency (ms)");
 
-
+        // sort
+        if (performanceSorted) {
+            vis.displayData.sort((a, b) => b[yOption] - a[yOption]);
+        }
+        else {
+            vis.displayData = [...vis.data];
+        }
 
         // Update domains
         vis.x.domain(vis.displayData.map(d => d.model_id));
@@ -138,7 +144,7 @@ class PerformanceVis {
             .attr("class", "bar")
             .merge(vis.bars)
             .on("mouseover", function (event, d) {
-                 // hover and give diming effect to other bars and ticks
+                // hover and give diming effect to other bars and ticks
                 d3.select(this).attr("stroke-width", 6);
                 d3.selectAll("rect").classed("dim", true);
                 d3.select(this).classed("dim", false);
@@ -147,7 +153,7 @@ class PerformanceVis {
                     .style("opacity", 1)
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px")
-                    .html( `
+                    .html(`
                         <h5>${d.model_id}</h5>
                         <strong>Provider:</strong> ${d.provider}
                         <br>

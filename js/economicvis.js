@@ -129,7 +129,6 @@ class EconomicVis {
         d3.select("#economic-y-axis-title").text(yOption == 'price_per_input_token' ? "Price of input tokens ($/ 1M tokens)" : "Price of output tokens ($/ 1M tokens)");
 
         // sort
-        
         if (economicSorted) {
             vis.displayData.sort((a, b) => b[yOption] - a[yOption]);
         }

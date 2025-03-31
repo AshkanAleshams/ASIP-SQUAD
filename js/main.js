@@ -4,6 +4,7 @@ let barriersToEntryVis, benchmarkVis, economicVis, performanceVis, compareVis;
 
 let benchmarkSorted = false;
 let economicSorted = false;
+let performanceSorted = false;
 
 // Date parser to convert strings to date objects
 let parseDate = d3.timeParse("%Y-%m-%d");
@@ -65,9 +66,16 @@ function sortBenchmarkVis(){
 }
 
 function sortEconomicVis(){
-    console.log("sortEconomicVis");
     economicSorted = !economicSorted;
     const button = document.querySelector("#economic-sort");
     button.innerHTML = economicSorted ? "Unsort" : "Sort";
     economicVis.updateVis();
 }
+
+function sortPerformanceVis(){
+    performanceSorted = !performanceSorted;
+    const button = document.querySelector("#performance-sort");
+    button.innerHTML = performanceSorted ? "Unsort" : "Sort";
+    performanceVis.updateVis();
+}
+
