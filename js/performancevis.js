@@ -104,7 +104,7 @@ class PerformanceVis {
 
     wrangleData() {
         let vis = this;
-        vis.displayData = vis.data.models;
+        vis.displayData = vis.data;
         // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
         vis.displayData = vis.displayData.map(d => ({
             ...d,

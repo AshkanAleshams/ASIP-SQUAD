@@ -85,7 +85,7 @@ class CompareVis {
 
     wrangleData() {
         let vis = this;
-        vis.displayData = vis.data.models.map(d => ({
+        vis.displayData = vis.data.map(d => ({
             ...d,
             price_per_input_token: (d.price_per_input_token * 1_000_000).toFixed(2),
             price_per_output_token: (d.price_per_output_token * 1_000_000).toFixed(2)
