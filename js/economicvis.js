@@ -107,6 +107,34 @@ class EconomicVis {
             .attr("fill", "white")
             .attr("text-anchor", "middle");
 
+        // Add legend
+        const legend = vis.svg
+            .append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${vis.width - 150}, 20)`);
+
+        const legendItems = vis.colorScale.domain();
+
+        legendItems.forEach((provider, i) => {
+            const legendRow = legend
+            .append("g")
+            .attr("transform", `translate(0, ${i * 20})`);
+
+            legendRow
+            .append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", vis.colorScale(provider));
+
+            legendRow
+            .append("text")
+            .attr("x", 20)
+            .attr("y", 12)
+            .attr("fill", "white")
+            .style("font-size", "12px")
+            .text(provider);
+        });
+
         vis.wrangleData();
     }
 
@@ -153,7 +181,7 @@ class EconomicVis {
 
         // Update bars
         let bars = vis.bars
-            .selectAll("rect")
+            .selectAll(".bar")
             .data(vis.displayData, (d) => d.model_id);
 
         // Enter
@@ -165,7 +193,7 @@ class EconomicVis {
             .attr("width", vis.x.bandwidth())
             .on("mouseover", function (event, d) {
                 d3.select(this).attr("stroke-width", 6);
-                d3.selectAll("rect").classed("dim", true);
+                d3.selectAll(".bar").classed("dim", true);
                 d3.select(this).classed("dim", false);
 
                 vis.tooltip
@@ -191,7 +219,7 @@ class EconomicVis {
             })
             .on("mouseout", function () {
                 d3.select(this).attr("stroke-width", 2);
-                d3.selectAll("rect").classed("dim", false);
+                d3.selectAll(".bar").classed("dim", false);
                 vis.tooltip
                     .style("opacity", 0)
                     .style("left", 0)

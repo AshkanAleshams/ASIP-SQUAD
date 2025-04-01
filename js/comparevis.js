@@ -27,7 +27,7 @@ class CompareVis {
             .attr('id', 'compare-title')
             .append('text')
             .text('Comparison of performance vs cost of LLMs')
-            .attr('transform', `translate(${vis.width / 2}, 20)`)
+            .attr('transform', `translate(${vis.width / 2}, 15)`)
             .attr("font-size", "20px")
             .attr("fill", "white")
             .attr('text-anchor', 'middle');
@@ -82,6 +82,33 @@ class CompareVis {
             .attr('class', "tooltip")
             .attr('id', 'compare-tooltip');
 
+        // Add legend
+        const legend = vis.svg
+            .append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${vis.width - 100}, 50)`);
+
+        const legendItems = vis.colorScale.domain();
+
+        legendItems.forEach((provider, i) => {
+            const legendRow = legend
+            .append("g")
+            .attr("transform", `translate(0, ${i * 20})`);
+
+            legendRow
+            .append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", vis.colorScale(provider));
+
+            legendRow
+            .append("text")
+            .attr("x", 20)
+            .attr("y", 12)
+            .attr("fill", "white")
+            .style("font-size", "12px")
+            .text(provider);
+        });
         
 
         vis.wrangleData();
