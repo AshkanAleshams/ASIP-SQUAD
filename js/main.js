@@ -1,5 +1,4 @@
-
-// global 
+// global
 let barriersToEntryVis, benchmarkVis, economicVis, performanceVis, compareVis;
 
 let benchmarkSorted = false;
@@ -9,12 +8,11 @@ let performanceSorted = false;
 // Date parser to convert strings to date objects
 let parseDate = d3.timeParse("%Y-%m-%d");
 
-
 // Load data
 let promises = [
-    d3.json("data/barriers.json"), 
+    d3.json("data/barriers.json"),
     d3.json("data/LLMStats_ChavezTamales_Data.json"),
-    d3.json("data/open_data.json")
+    d3.json("data/open_data.json"),
 ];
 
 Promise.all(promises)
@@ -24,7 +22,6 @@ Promise.all(promises)
     .catch(function (error) {
         console.log(error);
     });
-
 
 let selectedCategory = "average";
 
@@ -45,37 +42,35 @@ function onSelectChange() {
     benchmarkVis.updateVis();
 }
 
-function updateEconomicVis(){
-    economicVis.wrangleData();
+function updateEconomicVis() {
+    economicVis.updateVis();
 }
 
-function updatePerformanceVis(){
+function updatePerformanceVis() {
     performanceVis.wrangleData();
 }
 
-function updateCompareVis(){
+function updateCompareVis() {
     compareVis.wrangleData();
 }
 
-
-function sortBenchmarkVis(){
+function sortBenchmarkVis() {
     benchmarkSorted = !benchmarkSorted;
     const button = document.querySelector("#benchmark-sort");
     button.innerHTML = benchmarkSorted ? "Unsort" : "Sort";
     benchmarkVis.updateVis();
 }
 
-function sortEconomicVis(){
+function sortEconomicVis() {
     economicSorted = !economicSorted;
     const button = document.querySelector("#economic-sort");
     button.innerHTML = economicSorted ? "Unsort" : "Sort";
     economicVis.updateVis();
 }
 
-function sortPerformanceVis(){
+function sortPerformanceVis() {
     performanceSorted = !performanceSorted;
     const button = document.querySelector("#performance-sort");
     button.innerHTML = performanceSorted ? "Unsort" : "Sort";
     performanceVis.updateVis();
 }
-
