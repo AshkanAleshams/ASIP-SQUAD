@@ -1,7 +1,7 @@
 # ASIP-SQUAD
 
 ### Website Link: https://ashkanaleshams.github.io/ASIP-SQUAD/
-### Recording Link:
+### [Demo Video](https://drive.google.com/file/d/1sD6C7_CUIIZFH9CJBej8aCvpp7kAzSyW/view?usp=sharing)
 
 ## Overview
 
