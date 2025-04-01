@@ -15,7 +15,10 @@ Our visualization implementations can be found in `js/`. Each visualization has 
 
 ### Features
 
-- Every visualization has a tooltip that is revealed on hover
+- Every visualization has a tooltip that is revealed on hovering over the data or nodes
+- The visualizations have select button that allows you to change the data of interest
+- A toggle sort button is available for the visualizations to sort and unsort the data
+- The last visualization provides a data slider, allowing the user to select data within a specific range and a tooltip to define some of the terms
 
 ## Libraries and Credits
 
