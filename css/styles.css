@@ -53,6 +53,11 @@ section {
     font-weight: 500;
 }
 
+.next-button {
+    font-size: 20px;
+    text-anchor: middle;
+}
+
 #page2 {
     font-size: 40px;
     font-family: "Inter", sans-serif;
