@@ -1,13 +1,21 @@
 # ASIP-SQUAD
 
 ### Website Link: https://ashkanaleshams.github.io/ASIP-SQUAD/
-### Recording Link
+### Recording Link:
 
 ## Overview
+
+The data story displays 5 visualizations to model different LLM datasets. Each of the visualizations can be interacted with for data exploration.
 
 ## Data Sources
 
 ## Implementation
+
+Our visualization implementations can be found in `js/`. Each visualization has its own class, with `main.js` handling the data loading and visualization initialization.
+
+### Features
+
+- Every visualization has a tooltip that is revealed on hover
 
 ## Libraries and Credits
 
