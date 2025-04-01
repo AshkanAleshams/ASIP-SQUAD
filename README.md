@@ -16,9 +16,12 @@ Added libraries:
 - GSAP animations: https://gsap.com/ for scroll timing
 - Lenis: https://github.com/darkroomengineering/lenis for smooth scroll
 - typed.js https://github.com/mattboldt/typed.js for typing effects
+- Bootstrap 5: https://getbootstrap.com/ for styling
 
 SVG Assets:
 
-Downloaded libraries are found in [/libs](https://github.com/AshkanAleshams/ASIP-SQUAD/tree/main/libs)
+Found in [/assets](https://github.com/AshkanAleshams/ASIP-SQUAD/blob/main/assets) 
 
-Implementation for scroll and typing effects can be found in [animations.js](https://github.com/AshkanAleshams/ASIP-SQUAD/blob/main/js/animations.js)
+Downloaded libraries and their usages are found in [/libs](https://github.com/AshkanAleshams/ASIP-SQUAD/tree/main/libs)
+
+Implementation for scroll and typing effects can be found in [animations.js](https://github.com/AshkanAleshams/ASIP-SQUAD/blob/main/libs/animations.js)
