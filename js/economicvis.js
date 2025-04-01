@@ -90,7 +90,7 @@ class EconomicVis {
         vis.tooltip = d3
             .select("body")
             .append("div")
-            .attr("class", "tooltip")
+            .attr("class", "vis-tooltip")
             .attr("id", "economic-tooltip");
 
         vis.bars = vis.svg.append("g").attr("class", "bars");
@@ -197,6 +197,7 @@ class EconomicVis {
                 d3.select(this).classed("dim", false);
 
                 vis.tooltip
+                    .style("display", "block")
                     .style("opacity", 1)
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px").html(`

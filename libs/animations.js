@@ -53,3 +53,10 @@ gsap.ticker.add((time) => {
 });
 
 gsap.ticker.lagSmoothing(0);
+
+
+// enable bootstrap tooltips
+let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})

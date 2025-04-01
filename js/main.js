@@ -40,6 +40,7 @@ function renderVisualizations(data) {
 function onSelectChange() {
     selectedCategory = document.getElementById("benchmark").value;
     benchmarkVis.updateVis();
+    benchmarkVis.initSlider();
 }
 
 function updateEconomicVis() {
