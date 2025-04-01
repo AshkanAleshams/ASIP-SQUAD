@@ -19,6 +19,8 @@ Added libraries:
 - Bootstrap 5: https://getbootstrap.com/ for styling
 
 SVG Assets:
+- Svg lock source: https://www.svgrepo.com/svg/136946/lock 
+- Svg key source: https://www.svgrepo.com/svg/535465/key-skeleton
 
 Found in [/assets](https://github.com/AshkanAleshams/ASIP-SQUAD/blob/main/assets) 
 
