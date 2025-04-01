@@ -1,13 +1,13 @@
 /**
  * Visualization for LLM benchmarks
  */
-const BM_FILL_COLOR = "#f8f9fa";
 
 class BenchmarkVis {
     constructor(_parentElement, _data) {
         this.parentElement = _parentElement;
         this.data = _data;
         this.displayData = _data;
+        this.filteredData = null;
 
         this.initVis();
     }
@@ -83,9 +83,44 @@ class BenchmarkVis {
         vis.color = d3.scaleSequential(d3.interpolateCool);
 
         // append tooltip
-        vis.tooltip = d3.select("body").append('div')
-            .attr('class', "tooltip")
-            .attr('id', 'benchmark-tooltip');
+        vis.tooltip = d3
+            .select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .attr("id", "benchmark-tooltip");
+
+        vis.brushWidth = document.getElementById("data-slider").clientWidth;
+
+        vis.dataSlider = d3
+            .select("#data-slider")
+            .append("svg")
+            .attr("width", vis.brushWidth)
+            .attr("height", 50);
+
+        vis.brush = d3
+            .brushX()
+            .extent([
+                [0, 0],
+                [vis.brushWidth, 50],
+            ])
+            .on("brush end", function (event) {
+                if (event.selection) {
+                    vis.selectionChanged(
+                        event.selection.map(vis.xBrush.invert)
+                    );
+                } else {
+                    vis.selectionChanged([0, vis.brushWidth]);
+                }
+            });
+
+        vis.dataSlider.append("g").attr("class", "brush").call(vis.brush);
+
+        // clear brush button
+        vis.clearButton = d3.select("#clear-btn")
+            .style("display", "none")
+            .on("click", function () {
+                vis.clearSlider();
+            });
 
         vis.wrangleData();
     }
@@ -103,9 +138,6 @@ class BenchmarkVis {
         });
 
         vis.data = vis.data.filter((d) => d.official === true);
-
-        vis.data = vis.data.slice(0, 200);
-
         vis.displayData = vis.data;
 
         vis.updateVis();
@@ -114,15 +146,30 @@ class BenchmarkVis {
     updateVis() {
         let vis = this;
 
-        console.log(benchmarkSorted);
+        console.log("updateVis");
 
-        if (benchmarkSorted) {
-            vis.displayData.sort((a, b) => b[selectedCategory] - a[selectedCategory]);
+        if (vis.filteredData) {
+            vis.clearButton.style("display", "block");
+            vis.displayData = [...vis.filteredData];
         } else {
             vis.displayData = [...vis.data];
         }
 
-        vis.scale = 1;
+        if (benchmarkSorted) {
+            vis.displayData.sort(
+                (a, b) => b[selectedCategory] - a[selectedCategory]
+            );
+        }
+
+        console.log(vis.displayData.length);
+
+        vis.xBrush = d3
+            .scaleLinear()
+            .domain([
+                d3.min(vis.data, (d) => d[selectedCategory]),
+                d3.max(vis.data, (d) => d[selectedCategory]),
+            ])
+            .range([0, vis.brushWidth]);
 
         vis.xScale = vis.x.domain(vis.displayData.map((d) => d.model));
         vis.yScale = vis.y.domain([
@@ -149,6 +196,8 @@ class BenchmarkVis {
             .selectAll("path")
             .data(vis.displayData, (d) => d.model);
 
+        bars.exit().remove();
+
         let barsEnter = bars
             .enter()
             .append("path")
@@ -171,16 +220,16 @@ class BenchmarkVis {
                         <h5>Model: ${d.model}</h5>
                         <strong>Average Benchmark Score:</strong> ${d.average}
                         <br>
-                        <strong>CO2 Cost:</strong> ${d.co2cost}
+                        <strong>CO2 Cost (kg):</strong> ${d.co2cost}
                         <br>
                         <strong>Params:</strong> ${d.params}
                     `
                     );
-
             })
             .on("mouseout", function () {
                 d3.select(this).attr("stroke-width", 2);
                 d3.selectAll("path").classed("dim", false);
+
                 vis.tooltip
                     .style("opacity", 0)
                     .style("left", 0)
@@ -191,10 +240,47 @@ class BenchmarkVis {
         bars = barsEnter.merge(bars);
 
         bars.transition()
-            .duration(1000)
-            .attr("d", vis.arc)
+            .duration(500)
+            .delay((d, i) => i)
+            .attrTween("d", function (d) {
+                const currentElement = d3.select(this);
+                const startOuterRadius =
+                    currentElement.attr("_current_radius") || vis.innerRadius;
+                const endOuterRadius = vis.yScale(d[selectedCategory]);
+                currentElement.attr("_current_radius", endOuterRadius);
+                // update heights
+                return function (t) {
+                    const originalOuterRadius = vis.arc.outerRadius();
+                    vis.arc.outerRadius(
+                        d3.interpolate(startOuterRadius, endOuterRadius)(t)
+                    );
+
+                    const path = vis.arc(d);
+                    vis.arc.outerRadius(originalOuterRadius);
+                    return path;
+                };
+            })
             .attr("fill", (d) => vis.color(d[selectedCategory]))
             .attr("stroke", (d) => vis.color(d[selectedCategory]));
+    }
 
+    clearSlider() {
+        let vis = this;
+        vis.dataSlider.select(".brush").call(vis.brush.move, null);
+        vis.filteredData = null;
+        vis.clearButton.style("display", "none");
+        vis.updateVis();
+    }
+
+    selectionChanged(selectionDomain) {
+        let vis = this;
+
+        vis.filteredData = vis.data.filter(
+            (d) =>
+                d[selectedCategory] >= selectionDomain[0] &&
+                d[selectedCategory] <= selectionDomain[1]
+        );
+
+        vis.updateVis();
     }
 }

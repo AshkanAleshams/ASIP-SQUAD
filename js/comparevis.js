@@ -9,7 +9,7 @@ class CompareVis {
     initVis() {
         let vis = this;
 
-        vis.margin = { top: 30, right: 50, bottom: 100, left: 50 };
+        vis.margin = { top: 30, right: 50, bottom: 100, left: 100 };
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = 750 - vis.margin.top - vis.margin.bottom;
@@ -47,19 +47,21 @@ class CompareVis {
         vis.yAxis = d3.axisLeft().scale(vis.y);
 
         vis.xAxisGroup = vis.svg.append("g")
+            .style("font-size", "14px")
             .attr("class", "axis x-axis")
             .attr("transform", `translate(0,${vis.height})`);
 
         vis.yAxisGroup = vis.svg.append("g")
+            .style("font-size", "14px")
             .attr("class", "axis y-axis");
 
         // X-Axis label
         vis.svg.append("text")
             .attr("class", "x-axis-label")
-            .attr("id", "comapre-x-axis-title")
+            .attr("id", "compare-x-axis-title")
             .attr("x", vis.width / 2)
-            .attr("y", vis.height + vis.margin.bottom - 10)
-            .attr("font-size", "12px")
+            .attr("y", vis.height + vis.margin.bottom - 30)
+            .attr("font-size", "16px")
             .attr("fill", "white")
             .attr("text-anchor", "middle");
 
@@ -70,8 +72,8 @@ class CompareVis {
             .attr("id", "compare-y-axis-title")
             .attr("transform", "rotate(-90)")
             .attr("x", -vis.height / 2)
-            .attr("y", -vis.margin.left + 10)
-            .attr("font-size", "12px")
+            .attr("y", -vis.margin.left + 30)
+            .attr("font-size", "16px")
             .attr("fill", "white")
             .attr("text-anchor", "middle");
 
@@ -146,7 +148,7 @@ class CompareVis {
 
 
         //update the x-axis label
-        d3.select("#comapre-x-axis-title").text(tokenType == 'price_per_input_token' ? "Price of input tokens ($/ 1M tokens)" : "Price of output tokens ($/ 1M tokens)");
+        d3.select("#compare-x-axis-title").text(tokenType == 'price_per_input_token' ? "Price of input tokens ($/ 1M tokens)" : "Price of output tokens ($/ 1M tokens)");
 
         // Update y-axis label
         d3.select("#compare-y-axis-title").text(performanceType == 'throughput' ? "Processing speed: throughput / s" : "Response Time: latency (ms)");

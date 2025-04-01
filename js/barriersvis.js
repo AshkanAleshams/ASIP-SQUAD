@@ -120,9 +120,7 @@ class BarriersVis {
             .attr("id", (d, i) => `barriers-${i}`)
             .attr("r", vis.nodeRadius)
             .attr("fill", FILL_COLOR)
-            .attr("stroke", FILL_COLOR)
-            .on("mouseover", onMouseOver)
-            .on("mouseout", onMouseOut);
+            .attr("stroke", FILL_COLOR);
 
         function onMouseOver(event, d) {
             if (d.id === 0) {
@@ -135,13 +133,23 @@ class BarriersVis {
             vis.tooltip
                 .style("display", "block")
                 .html(`<h6>${d.name}</h6><p>${d.description}</p>`)
-                .style("left", event.pageX + "px")
-                .style("top", event.pageY + "px");
+                .style("left", event.pageX + 15 + "px")
+                .style("top", event.pageY - 10 + "px");
+            vis.tooltip.transition().duration(200).style("opacity", 1);
         }
 
         function onMouseOut(event, d) {
-            vis.tooltip.style("display", "none");
-            d3.select(`#barriers-${d.id}`).attr("r", vis.nodeRadius);
+            vis.tooltip
+                .transition()
+                .duration(200)
+                .style("opacity", 0)
+                .on("end", function () {
+                    vis.tooltip.style("display", "none");
+                });
+            d3.select(`#barriers-${d.id}`)
+                .transition()
+                .duration(200)
+                .attr("r", vis.nodeRadius);
         }
 
         // add dotted line accent
@@ -163,6 +171,15 @@ class BarriersVis {
             .append("g")
             .html(lockSVG)
             .attr("transform", "translate(-30, -30)");
+
+        // add click area on top of the visible nodes
+        node.append("circle")
+            .attr("class", "click-area")
+            .attr("r", vis.nodeRadius + 10)
+            .attr("fill", "transparent")
+            .attr("stroke", "transparent")
+            .on("mouseover", onMouseOver)
+            .on("mouseout", onMouseOut);
 
         // add labels
         node.append("text")
