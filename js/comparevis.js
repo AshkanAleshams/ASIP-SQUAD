@@ -27,7 +27,7 @@ class CompareVis {
             .attr('id', 'compare-title')
             .append('text')
             .text('Comparison of performance vs cost of LLMs')
-            .attr('transform', `translate(${vis.width / 2}, 20)`)
+            .attr('transform', `translate(${vis.width / 2}, 15)`)
             .attr("font-size", "20px")
             .attr("fill", "white")
             .attr('text-anchor', 'middle');
@@ -82,47 +82,34 @@ class CompareVis {
             .attr('class', "tooltip")
             .attr('id', 'compare-tooltip');
 
-        // Append brush component here
-        vis.brushGroup = vis.svg.append("g").attr("class", "brush");
+        // Add legend
+        const legend = vis.svg
+            .append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${vis.width - 100}, 50)`);
 
-        // Add zoom component
-        vis.xOrig = vis.x; // save original scale
+        const legendItems = vis.colorScale.domain();
 
-        // vis.resetButton = d3.select("#reset-button");
+        legendItems.forEach((provider, i) => {
+            const legendRow = legend
+            .append("g")
+            .attr("transform", `translate(0, ${i * 20})`);
 
-        vis.zoomFunction = function (event) {
-            // vis.resetButton.style("display", "block")
-            console.log("zooming");
-            let xScaleModified = event.transform.rescaleX(vis.xOrig);
-            vis.x = xScaleModified;
-            vis.xAxis.scale(vis.x);
-            // if (vis.currentBrushRegion) {
-            //     vis.brushGroup.call(
-            //         vis.brush.move,
-            //         vis.currentBrushRegion.map(vis.x)
-            //     );
-            // }
-            vis.updateVis();
-        }; // function that is being called when user zooms
+            legendRow
+            .append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", vis.colorScale(provider));
 
-        vis.zoom = d3.zoom().on("zoom", vis.zoomFunction).scaleExtent([1, 20]);
-
-        // const resetZoom = () => {
-        //     vis.resetButton.style("display", "none");
-        //     vis.x = vis.xOrig;
-        //     vis.xAxis.scale(vis.x);
-        //     vis.updateVis();
-        // };
-
-        // vis.resetButton.on("click", function () {
-        //     resetZoom();
-        // });
-
-        // disable mousedown and drag in zoom, when you activate zoom (by .call)
-        vis.xAxisGroup
-            .call(vis.zoom)
-            .on("mousedown.zoom", null)
-            .on("touchstart.zoom", null);
+            legendRow
+            .append("text")
+            .attr("x", 20)
+            .attr("y", 12)
+            .attr("fill", "white")
+            .style("font-size", "12px")
+            .text(provider);
+        });
+        
 
         vis.wrangleData();
     }

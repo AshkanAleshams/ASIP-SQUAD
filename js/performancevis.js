@@ -114,23 +114,53 @@ class PerformanceVis {
             .attr("fill", "white")
             .attr("text-anchor", "middle");
 
+        // Add legend
+        const legend = vis.svg
+            .append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${vis.width - 150}, 20)`);
+
+        const legendItems = vis.colorScale.domain();
+
+        legendItems.forEach((provider, i) => {
+            const legendRow = legend
+            .append("g")
+            .attr("transform", `translate(0, ${i * 20})`);
+
+            legendRow
+            .append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", vis.colorScale(provider));
+
+            legendRow
+            .append("text")
+            .attr("x", 20)
+            .attr("y", 12)
+            .attr("fill", "white")
+            .style("font-size", "12px")
+            .text(provider);
+        });
+
         vis.wrangleData();
     }
 
     wrangleData() {
         let vis = this;
 
-        // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
-        vis.data = vis.data.map((d) => ({
-            ...d,
-            price_per_input_token: (
-                d.price_per_input_token * 1_000_000
-            ).toFixed(2),
-            price_per_output_token: (
-                d.price_per_output_token * 1_000_000
-            ).toFixed(2),
-        }));
+        vis.displayData = [];
+        vis.origData = [];
+
         vis.displayData = vis.data;
+        // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
+         // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
+         vis.displayData = vis.displayData.map((d) => ({
+            ...d,
+            price_per_input_token: d.price_per_input_token * 1_000_000,
+            price_per_output_token: d.price_per_output_token * 1_000_000,
+        }));
+
+        vis.origData = vis.displayData;
         this.updateVis();
     }
 
@@ -151,7 +181,7 @@ class PerformanceVis {
         if (performanceSorted) {
             vis.displayData.sort((a, b) => b[yOption] - a[yOption]);
         } else {
-            vis.displayData = [...vis.data];
+            vis.displayData = [...vis.origData];
         }
 
         // Update domains
@@ -160,7 +190,7 @@ class PerformanceVis {
 
         // Update bars
         vis.bars = vis.svg
-            .selectAll("rect")
+            .selectAll(".bar")
             .data(vis.displayData, (d) => d.model_id);
 
         // Enter
@@ -172,7 +202,7 @@ class PerformanceVis {
             .on("mouseover", function (event, d) {
                 // hover and give diming effect to other bars and ticks
                 d3.select(this).attr("stroke-width", 6);
-                d3.selectAll("rect").classed("dim", true);
+                d3.selectAll(".bar").classed("dim", true);
                 d3.select(this).classed("dim", false);
 
                 vis.tooltip
@@ -186,16 +216,16 @@ class PerformanceVis {
                         <br>
                         <strong>Latency</strong> ${d.latency} ms
                         <br>
-                        <strong>Price per input token ($/1M tokens):</strong> $${d.price_per_input_token} 
+                        <strong>Price per input token ($/1M tokens):</strong> $${d.price_per_input_token.toFixed(2)} 
                         <br>
-                        <strong>Price per output token ($/1M tokens):</strong> $${d.price_per_output_token}
+                        <strong>Price per output token ($/1M tokens):</strong> $${d.price_per_output_token.toFixed(2)}
 
                     `);
             })
             .on("mouseout", function () {
                 // unhover and remove diming effect
                 d3.select(this).attr("stroke-width", 2);
-                d3.selectAll("rect ").classed("dim", false);
+                d3.selectAll(".bar").classed("dim", false);
                 vis.tooltip
                     .style("opacity", 0)
                     .style("left", 0)
