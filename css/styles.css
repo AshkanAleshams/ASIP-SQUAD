@@ -96,6 +96,10 @@ section {
     flex: 1;
 }
 
+#page12 {
+    margin-top: 50vh;
+}
+
 #benchmark-vis {
     width: 100%;
     height: 100%;
