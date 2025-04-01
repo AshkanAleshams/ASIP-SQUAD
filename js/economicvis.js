@@ -112,15 +112,18 @@ class EconomicVis {
 
     wrangleData() {
         let vis = this;
-
+        
+        vis.displayData = [];
+        vis.origData = [];
+        vis.displayData = vis.data;
         // multiply by 1M to get the price per 1M tokens and round to 2 decimal places
-        vis.data = vis.data.map((d) => ({
+        vis.displayData = vis.displayData.map((d) => ({
             ...d,
             price_per_input_token: d.price_per_input_token * 1_000_000,
             price_per_output_token: d.price_per_output_token * 1_000_000,
         }));
 
-        vis.displayData = vis.data;
+        vis.origData = vis.displayData;
         this.updateVis();
     }
 
@@ -141,7 +144,7 @@ class EconomicVis {
         if (economicSorted) {
             vis.displayData.sort((a, b) => b[yOption] - a[yOption]);
         } else {
-            vis.displayData = [...vis.data];
+            vis.displayData = [...vis.origData];
         }
 
         // Update domains
