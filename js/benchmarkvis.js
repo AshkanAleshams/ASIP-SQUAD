@@ -15,7 +15,7 @@ class BenchmarkVis {
     initVis() {
         let vis = this;
 
-        vis.margin = { top: 300, right: 0, bottom: 10, left: 0 };
+        vis.margin = { top: 100, right: 0, bottom: 10, left: 0 };
 
         (vis.width =
             document.getElementById(vis.parentElement).getBoundingClientRect()
@@ -50,7 +50,7 @@ class BenchmarkVis {
             .attr("class", "bar-group")
             .attr(
                 "transform",
-                `translate(${vis.width / 2}, ${vis.height / 4})`
+                `translate(${vis.width / 2}, ${vis.height / 2})`
             );
 
         // init the benchmark circle
@@ -58,7 +58,7 @@ class BenchmarkVis {
             .append("circle")
             .attr("class", "benchmark-circle")
             .attr("cx", vis.width / 2)
-            .attr("cy", vis.height / 4)
+            .attr("cy", vis.height / 2)
             .attr("r", vis.radius)
             .attr("fill", "none")
             .attr("stroke", "white")
@@ -67,7 +67,7 @@ class BenchmarkVis {
         // put in the middle of the circle
         d3.select("#benchmark-dropdown")
             .style("left", `${vis.width / 2 + 10}px`)
-            .style("top", `${vis.height / 4 + 350}px`)
+            .style("top", `${vis.height / 2 + vis.margin.top}px`)
             .style("transform", "translate(-50%, -50%)")
             .style("position", "absolute");
 
@@ -80,13 +80,16 @@ class BenchmarkVis {
             .padding(0.01);
         vis.y = d3.scaleRadial().range([vis.innerRadius, vis.outerRadius]);
 
+        vis.sliderMin = d3.select("#slider-min");
+        vis.sliderMax = d3.select("#slider-max");
+
         vis.color = d3.scaleSequential(d3.interpolateCool);
 
         // append tooltip
         vis.tooltip = d3
             .select("body")
             .append("div")
-            .attr("class", "tooltip")
+            .attr("class", "vis-tooltip")
             .attr("id", "benchmark-tooltip");
 
         vis.brushWidth = document.getElementById("data-slider").clientWidth;
@@ -108,21 +111,30 @@ class BenchmarkVis {
                     vis.selectionChanged(
                         event.selection.map(vis.xBrush.invert)
                     );
-                } else {
-                    vis.selectionChanged([0, vis.brushWidth]);
                 }
             });
 
         vis.dataSlider.append("g").attr("class", "brush").call(vis.brush);
 
         // clear brush button
-        vis.clearButton = d3.select("#clear-btn")
+        vis.clearButton = d3
+            .select("#clear-btn")
             .style("display", "none")
             .on("click", function () {
                 vis.clearSlider();
             });
 
         vis.wrangleData();
+    }
+
+    initSlider() {
+        let vis = this;
+        vis.sliderMin.text(
+            d3.min(vis.displayData, (d) => d[selectedCategory]).toFixed(2)
+        );
+        vis.sliderMax.text(
+            d3.max(vis.displayData, (d) => d[selectedCategory]).toFixed(2)
+        );
     }
 
     wrangleData() {
@@ -140,13 +152,12 @@ class BenchmarkVis {
         vis.data = vis.data.filter((d) => d.official === true);
         vis.displayData = vis.data;
 
+        vis.initSlider();
         vis.updateVis();
     }
 
     updateVis() {
         let vis = this;
-
-        console.log("updateVis");
 
         if (vis.filteredData) {
             vis.clearButton.style("display", "block");
@@ -160,8 +171,6 @@ class BenchmarkVis {
                 (a, b) => b[selectedCategory] - a[selectedCategory]
             );
         }
-
-        console.log(vis.displayData.length);
 
         vis.xBrush = d3
             .scaleLinear()
@@ -196,7 +205,7 @@ class BenchmarkVis {
             .selectAll("path")
             .data(vis.displayData, (d) => d.model);
 
-        bars.exit().remove();
+        bars.exit().transition().duration(100).attr("opacity", 0).remove();
 
         let barsEnter = bars
             .enter()
@@ -241,6 +250,7 @@ class BenchmarkVis {
 
         bars.transition()
             .duration(500)
+            .attr("opacity", 1)
             .delay((d, i) => i)
             .attrTween("d", function (d) {
                 const currentElement = d3.select(this);
@@ -270,10 +280,14 @@ class BenchmarkVis {
         vis.filteredData = null;
         vis.clearButton.style("display", "none");
         vis.updateVis();
+        vis.initSlider();
     }
 
     selectionChanged(selectionDomain) {
         let vis = this;
+
+        vis.sliderMin.text(selectionDomain[0].toFixed(2));
+        vis.sliderMax.text(selectionDomain[1].toFixed(2));
 
         vis.filteredData = vis.data.filter(
             (d) =>

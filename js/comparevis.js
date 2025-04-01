@@ -79,7 +79,7 @@ class CompareVis {
 
         // append tooltip
         vis.tooltip = d3.select("body").append('div')
-            .attr('class', "tooltip")
+            .attr('class', "vis-tooltip")
             .attr('id', 'compare-tooltip');
 
         // Add legend
@@ -161,6 +161,7 @@ class CompareVis {
                 d3.select(this).classed("dim", false);
 
                 vis.tooltip
+                    .style("display", "block")
                     .style("opacity", 1)
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px")

@@ -17,10 +17,7 @@ class PerformanceVis {
             vis.margin.left -
             vis.margin.right),
             (vis.height = 750 - vis.margin.top - vis.margin.bottom);
-        console.log(
-            document.getElementById(vis.parentElement).getBoundingClientRect()
-                .width
-        );
+
         vis.svg = d3
             .select(`#${vis.parentElement}`)
             .append("svg")
@@ -99,7 +96,7 @@ class PerformanceVis {
         vis.tooltip = d3
             .select("body")
             .append("div")
-            .attr("class", "tooltip")
+            .attr("class", "vis-tooltip")
             .attr("id", "performance-tooltip");
 
         //title
@@ -206,6 +203,7 @@ class PerformanceVis {
                 d3.select(this).classed("dim", false);
 
                 vis.tooltip
+                    .style("display", "block")
                     .style("opacity", 1)
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY + "px").html(`
