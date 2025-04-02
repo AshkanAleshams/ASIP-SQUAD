@@ -14,9 +14,9 @@ The data we used can be found in `data/`
 - [Barriers data source](https://deeperinsights.com/ai-blog/the-unspoken-challenges-of-large-language-models   ):
   - [barriers.json](https://github.com/AshkanAleshams/ASIP-SQUAD/blob/4ad0ac0bf12014f61d9e772e89ce62e8ae9671d1/data/barriers.json)
   - Used ChatGPT to generate a json dataset with the information from the article 
-- [Open LLM data](https://github.com/JonathanChavezTamales/LLMStats):
+- [Open LLM data source](https://github.com/JonathanChavezTamales/LLMStats):
   - [open_data.json](https://github.com/AshkanAleshams/ASIP-SQUAD/blob/4ad0ac0bf12014f61d9e772e89ce62e8ae9671d1/data/open_data.json)
-- [LLM Stats data](https://huggingface.co/datasets/open-llm-leaderboard/contents):
+- [LLM Stats data source](https://huggingface.co/datasets/open-llm-leaderboard/contents):
   - [LLMStats_ChavezTamales_Data.json](https://github.com/AshkanAleshams/ASIP-SQUAD/blob/4ad0ac0bf12014f61d9e772e89ce62e8ae9671d1/data/LLMStats_ChavezTamales_Data.json)
 
 ## Implementation
