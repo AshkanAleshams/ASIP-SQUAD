@@ -23,6 +23,12 @@ The data we used can be found in `data/`
 
 Our visualization implementations can be found in `js/`. Each visualization has its own class, with `main.js` handling the data loading and visualization initialization.
 
+- Vis 1: barriersvis.js
+- Vis 2: economicvis.js
+- Vis 3: performancevis.js
+- Vis 4: comparevis.js
+- Vis 5: benchmarkvis.js
+
 ### Features
 
 - Every visualization has a tooltip that is revealed on hovering over the data or nodes
